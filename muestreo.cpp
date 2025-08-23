@@ -1,5 +1,7 @@
 #include <iostream>
 #include <vector>
+#include <cmath>
+
 using namespace std;
 int belongsTo(double *thetas){
     /*Private function. Called on multinomial.
@@ -89,7 +91,14 @@ extern "C" {
        }
 
     }
-    void muestreoExponencial(){
-
+    void muestreoExponencial(double lambda,int n, double *results){
+        /*Let lambda be the rate parameter of the exponential distribution
+        Let n be the size of the samples
+        Results is a vector of size n, where results[i] is the i-th sample
+        */
+       for(int i=0;i<n;i++){
+           double u = (double)rand()/(RAND_MAX);
+           results[i] = -log(1-u)/lambda;
+       }
     }
 }
