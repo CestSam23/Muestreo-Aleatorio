@@ -50,7 +50,7 @@ extern "C" {
     }
 
     //Muestreo con partes iguales
-    void muestreoMultinomial(int slices, int n, int k,double **results){
+    void muestreoMultinomialFixedl(int slices, int n, int k,double **results){
         /*Let Slices be the probability of each case in the experiment
         where A1+A2+...+Aslices=1. 1/slices. (Same probability for each one)
         Let n be the size of the samples
@@ -73,7 +73,7 @@ extern "C" {
     }
 
     //Muestreo con n probabilidad
-    void muestreoMultinomial(double *thetas, int n, int k, double **results){
+    void muestreoMultinomialDynamic(double *thetas, int n, int k, double **results){
         /*Let thetas be the probability of each case in the experiment
         where A1+A2+...+Aslices=1. (Different probability for each one).
         (Array of double).
