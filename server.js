@@ -80,107 +80,147 @@ function read2DArray(pointersBuffer, rowBuffers, rows, cols) {
 
 module.exports = lib;
 
+//Server
+const getContentType = (filePath) => {
+  const ext = filePath.split('.').pop();
+  const contentTypes = {
+    'html': 'text/html',
+    'css': 'text/css',
+    'js': 'application/javascript',
+    'json': 'application/json',
+    'png': 'image/png',
+    'jpg': 'image/jpeg',
+    'jpeg': 'image/jpeg',
+    'gif': 'image/gif',
+    'svg': 'image/svg+xml'
+  };
+  return contentTypes[ext] || 'text/plain';
+};
+
 const requestListener = function (req, res) {
-    if(req.url.startsWith('/api/bernoulli')){
-        const params = parseQueryParams(req.url);
-        const theta = params.prob_exito;
-        const n = params.num_experimentos;
-        const succes = ref.alloc(double,0);
-        const failure = ref.alloc(double,0);
-
-        lib.muestreoBernulli(succes,failure,theta,n);
-        console.log(params);
-
-        res.setHeader('Content-Type', 'application/json');
-        res.end(JSON.stringify({ success: succes.deref(), failure: failure.deref() }));
-        console.log("\n");
-        return;
-    } 
-    if(req.url.startsWith('/api/binomial')){
-        const params = parseQueryParams(req.url);
-        const succes = createDoubleArray(params.num_experimentos);
-        const theta = params.prob_exito
-        const n = params.num_muestra;
-        const k = params.num_experimentos;
-        
-        lib.muestreoBinomial(succes,theta,n,k);
-        
-        const resultados = readDoubleArray(succes,k);
-        console.log(params);
-
-        res.setHeader('Content-Type', 'application/json');
-        res.end(JSON.stringify({ results: resultados}));
-        console.log("\n");
-        return;
-    }
-    if(req.url.startsWith('/api/exponencial')){
-        const params = parseQueryParams(req.url);
-        const results = createDoubleArray(params.num_experimentos);
-        const lambda = params.prob_exito;
-        const n = params.num_experimentos;
-
-        lib.muestreoExponencial(lambda,n,results);
-        console.log(params);
-
-        const resultados = readDoubleArray(results, n);
-
-        res.setHeader('Content-Type','application/json');
-        res.end(JSON.stringify({ results: resultados }));
-        console.log("\n");
-        return;
-    }
-    if(req.url.startsWith('/api/multinomialf')){
-        const params = parseQueryParams(req.url);
-        const slices = params.cant_prob;
-        const n = params.num_muestra;
-        const k = params.num_experimentos;
-        //Creación de buffer
-        const{pointersBuffer,rowBuffers} = create2DArray(k,slices);
-
-        //Llamar libreria
-        lib.muestreoMultinomialFixedl(slices,n,k,pointersBuffer);
-        console.log(params);
-
-        //leer resultados
-        const resultados = read2DArray(pointersBuffer,rowBuffers,k,slices);
-
-        res.setHeader('Content-Type','application/json');
-        res.end(JSON.stringify({ results: resultados }));
-        console.log("\n");
-        return;
-    }
-    if(req.url.startsWith('/api/multinomialv')){
-        const params = parseQueryParams(req.url);
-        const n = params.num_muestra;
-        const k = params.num_experimentos;
-        
-        //Obtener thetas
-        let thetas;
-        if(params.probs_dyn){
-            thetas = JSON.parse(params.probs_dyn);
-        }
-
-        //Creación de buffer
-        const{pointersBuffer,rowBuffers} = create2DArray(k,thetas.length);
-        const thetasBuffer = createDoubleArray(thetas.length);
-        for (let i = 0; i < thetas.length; i++) {
-            thetasBuffer.writeDoubleLE(thetas[i], i * 8);
-        }
-
-        //Llamar libreria
-        lib.muestreoMultinomialDynamic(thetasBuffer,n,k,pointersBuffer);
-        console.log(params);
-
-        //Leer resultados
-        const resultados = read2DArray(pointersBuffer,rowBuffers,k,thetas.length);
-
-        res.setHeader('Content-Type','application/json');
-        res.end(JSON.stringify({ results: resultados }));
-        console.log("\n");
-        return;
-    }
-    fs.readFile(__dirname + '/index.html')
+    //Servir archivos estáticos
+    if(req.url.startsWith('/public/')){
+        const filePath = __dirname + req.url;
+        fs.readFile(filePath)
         .then(contents => {
+            res.setHeader('Content-Type',getContentType(filePath));
+            res.writeHead(200);
+            res.end(contents);
+        })
+        .catch(err => {
+            res.writeHead(404);
+            res.end("File not found");
+        });
+        return;
+    }
+
+    if(req.url.startsWith('/api/')){
+        if(req.url.startsWith('/api/bernoulli')){
+            const params = parseQueryParams(req.url);
+            const theta = params.prob_exito;
+            const n = params.num_experimentos;
+            const succes = ref.alloc(double,0);
+            const failure = ref.alloc(double,0);
+
+            lib.muestreoBernulli(succes,failure,theta,n);
+            console.log(params);
+
+            res.setHeader('Content-Type', 'application/json');
+            res.end(JSON.stringify({ success: succes.deref(), failure: failure.deref() }));
+            console.log("\n");
+            return;
+        } 
+        if(req.url.startsWith('/api/binomial')){
+            const params = parseQueryParams(req.url);
+            const succes = createDoubleArray(params.num_experimentos);
+            const theta = params.prob_exito
+            const n = params.num_muestra;
+            const k = params.num_experimentos;
+            
+            lib.muestreoBinomial(succes,theta,n,k);
+            
+            const resultados = readDoubleArray(succes,k);
+            console.log(params);
+
+            res.setHeader('Content-Type', 'application/json');
+            res.end(JSON.stringify({ results: resultados}));
+            console.log("\n");
+            return;
+        }
+        if(req.url.startsWith('/api/exponencial')){
+            const params = parseQueryParams(req.url);
+            const results = createDoubleArray(params.num_experimentos);
+            const lambda = params.prob_exito;
+            const n = params.num_experimentos;
+
+            lib.muestreoExponencial(lambda,n,results);
+            console.log(params);
+
+            const resultados = readDoubleArray(results, n);
+
+            res.setHeader('Content-Type','application/json');
+            res.end(JSON.stringify({ results: resultados }));
+            console.log("\n");
+            return;
+        }
+        if(req.url.startsWith('/api/multinomialf')){
+            const params = parseQueryParams(req.url);
+            const slices = params.cant_prob;
+            const n = params.num_muestra;
+            const k = params.num_experimentos;
+            //Creación de buffer
+            const{pointersBuffer,rowBuffers} = create2DArray(k,slices);
+
+            //Llamar libreria
+            lib.muestreoMultinomialFixedl(slices,n,k,pointersBuffer);
+            console.log(params);
+
+            //leer resultados
+            const resultados = read2DArray(pointersBuffer,rowBuffers,k,slices);
+
+            res.setHeader('Content-Type','application/json');
+            res.end(JSON.stringify({ results: resultados }));
+            console.log("\n");
+            return;
+        }
+        if(req.url.startsWith('/api/multinomialv')){
+            const params = parseQueryParams(req.url);
+            const n = params.num_muestra;
+            const k = params.num_experimentos;
+            
+            //Obtener thetas
+            let thetas;
+            if(params.probs_dyn){
+                thetas = JSON.parse(params.probs_dyn);
+            }
+
+            //Creación de buffer
+            const{pointersBuffer,rowBuffers} = create2DArray(k,thetas.length);
+            const thetasBuffer = createDoubleArray(thetas.length);
+            for (let i = 0; i < thetas.length; i++) {
+                thetasBuffer.writeDoubleLE(thetas[i], i * 8);
+            }
+
+            //Llamar libreria
+            lib.muestreoMultinomialDynamic(thetasBuffer,n,k,pointersBuffer);
+            console.log(params);
+
+            //Leer resultados
+            const resultados = read2DArray(pointersBuffer,rowBuffers,k,thetas.length);
+
+            res.setHeader('Content-Type','application/json');
+            res.end(JSON.stringify({ results: resultados }));
+            console.log("\n");
+            return;
+    }
+        return;
+    }
+
+    // Servir página principal
+    if (req.url === '/' || req.url === '/index.html') {
+        fs.readFile(__dirname + '/public/index.html')
+        .then(contents => {
+            res.setHeader('Content-Type', 'text/html');
             res.writeHead(200);
             res.end(contents);
         })
@@ -188,6 +228,11 @@ const requestListener = function (req, res) {
             res.writeHead(500);
             res.end(err.toString());
         });
+        return;
+    }
+      // Si no es ninguna ruta conocida
+    res.writeHead(404);
+    res.end('Página no encontrada');
 };
 
 
