@@ -7,10 +7,13 @@ int belongsTo(double *thetas){
     /*Private function. Called on multinomial.
     Return the position in which a random number is generated in a set of a sample*/
 
-    int position = 0, accumulated = 0;
+    int position = 0;
+    double accumulated = 0;
+    double random=double(rand())/RAND_MAX;
+
     while(true){
-        if((double)rand()/RAND_MAX>accumulated &&
-            (double)rand()/RAND_MAX<thetas[position]+accumulated){
+        if(random>accumulated &&
+            random<thetas[position]+accumulated){
             return position;
         }
         accumulated += thetas[position];
@@ -61,18 +64,16 @@ extern "C" {
         Results is a vector of R2, where R2[i] is the number of successes for the i-th slice
         */
        srand(time(NULL));
-       
         vector<double> r(slices,0.0);
         for(int i=0;i<slices;i++){
             r[i] = 1.0/slices;
         }
-
+        
         for(int i=0;i<k;i++){
             for(int j=0;j<n;j++){
                 results[i][belongsTo(r.data())]++;
             }
         }
-
     }
 
     //Muestreo con n probabilidad
