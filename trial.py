@@ -4,12 +4,15 @@ import matplotlib.pyplot as plt
 
 
 def plot_results(data, title):
-    # Crear histograma con bins automáticos
-    plt.figure(figsize=(14,6))
-    plt.hist(data, bins='auto', color='skyblue', edgecolor='black')
+    # data debe ser un array 1D con las ocurrencias de cada slice
+    plt.figure(figsize=(8,6))
+    slices = len(data)
+    x = np.arange(slices)
+    plt.bar(x, data, color='skyblue', edgecolor='black')
+    plt.xlabel('Slice')
+    plt.ylabel('Número de ocurrencias')
     plt.title(title)
-    plt.xlabel("Valor")
-    plt.ylabel("Número de ocurrencias")
+    plt.xticks(x)
     plt.tight_layout()
     plt.show()
 
@@ -17,38 +20,27 @@ def plot_results(data, title):
 lib = ctypes.CDLL("/home/samuel/Documents/Universidad/mineria/muestreo/libmuestreo.so")
 
 #Definir prototipo
-#void muestreoBernulli(double *success, double *failure, double theta, int n)
-lib.muestreoBernulli.argtypes = [ctypes.POINTER(ctypes.c_double), ctypes.POINTER(ctypes.c_double), ctypes.c_double, ctypes.c_int]
-lib.muestreoBernulli.restype = None
-
-#void muestreoBinomial(double *success, double theta, int n, int k)
-lib.muestreoBinomial.argtypes = [ctypes.POINTER(ctypes.c_double), ctypes.c_double, ctypes.c_int, ctypes.c_int]
-lib.muestreoBinomial.restype = None
 
 #void muestreoMultinomialFixedl(int slices, int n, int k, double **results)
 lib.muestreoMultinomialFixedl.argtypes = [ctypes.c_int, ctypes.c_int, ctypes.c_int, ctypes.POINTER(ctypes.POINTER(ctypes.c_double))]
 lib.muestreoMultinomialFixedl.restype = None
 
-#void muestreoMultinomialDynamic(double *thetas, int n, int k, double **results)
-lib.muestreoMultinomialDynamic.argtypes = [ctypes.POINTER(ctypes.c_double), ctypes.c_int, ctypes.c_int, ctypes.POINTER(ctypes.POINTER(ctypes.c_double))]
-lib.muestreoMultinomialDynamic.restype = None
+slices = 6
+n=1000
+k=20
+results = (ctypes.POINTER(ctypes.c_double) * k)()
+for i in range(k):
+    results[i] = (ctypes.c_double * slices)()  # Allocate array of n doubles
 
-#void muestreoExponencial(double lambda, int n, double *results)
-lib.muestreoExponencial.argtypes = [ctypes.c_double, ctypes.c_int, ctypes.POINTER(ctypes.c_double)]
-lib.muestreoExponencial.restype = None
 
+lib.muestreoMultinomialFixedl(slices, n, k, results)
 
-theta = 0.5
-n = 100000
-k = 1000
-success = (ctypes.c_double * k)()  # Allocate array of k doubles
-
-lib.muestreoBinomial(success, theta, n, k)
-
-# Convert to numpy array for easy slicing/printing
-success_np = np.ctypeslib.as_array(success, shape=(k,))
+# Convert C double** results to numpy array manually
+output = np.zeros((k, slices))
+for i in range(k):
+    output[i, :] = np.ctypeslib.as_array(results[i], shape=(slices,))
 
 print("Sample Completed. Generating Plots...")
-plot_results(success_np, "Muestreo Binomial")
-
+print(output)
+plot_results(output[0], "Muestreo Multinomial Fijo")
 
