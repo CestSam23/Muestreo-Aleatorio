@@ -25,7 +25,7 @@ const lib = ffi.Library('./libmuestreo.so', {
     muestreoBernulli: ["void", [doublePtr, doublePtr,"double","int"]],
     muestreoBinomial: ["void", ['pointer',"double","int","int"]],
     muestreoExponencial: ["void", ["double","int","pointer"]],
-    muestreoMultinomialFixedl: ["void",["double","int","int","int","pointer"]],
+    muestreoMultinomialFixedl: ["void",["int","int","int","pointer"]],
     muestreoMultinomialDynamic: ["void", ["pointer","int","int","pointer"]]
 });
 
@@ -124,11 +124,50 @@ const requestListener = function (req, res) {
     }
     if(req.url.startsWith('/api/multinomialf')){
         const params = parseQueryParams(req.url);
-        console.log("Request Multinomial Fixed");
+        
+        //Creación de buffer
+        const{pointersBuffer,rowBuffers} = create2DArray(params.num_experimentos,params.cant_prob);
+
+        //Llamar libreria
+        lib.muestreoMultinomialFixedl(params.cant_prob,params.num_muestra,params.num_experimentos,pointersBuffer);
+        console.log(params);
+
+        //leer resultados
+        const resultados = read2DArray(pointersBuffer,rowBuffers,params.num_experimentos,params.cant_prob);
+
+        res.setHeader('Content-Type','application/json');
+        res.end(JSON.stringify({ results: resultados }));
+        console.log("\n");
+        return;
     }
     if(req.url.startsWith('/api/multinomialv')){
         const params = parseQueryParams(req.url);
-        console.log("Request Multinomial Variable");
+
+        
+        //Obtener thetas
+        let thetas;
+        if(params.probs_dyn){
+            thetas = JSON.parse(params.probs_dyn);
+        }
+
+        //Creación de buffer
+        const{pointersBuffer,rowBuffers} = create2DArray(params.num_experimentos,thetas.length);
+        const thetasBuffer = createDoubleArray(thetas.length);
+        for (let i = 0; i < thetas.length; i++) {
+            thetasBuffer.writeDoubleLE(thetas[i], i * 8);
+        }
+
+        //Llamar libreria
+        lib.muestreoMultinomialDynamic(thetasBuffer,params.num_muestra,params.num_experimentos,pointersBuffer);
+        console.log(params);
+
+        //Leer resultados
+        const resultados = read2DArray(pointersBuffer,rowBuffers,params.num_experimentos,thetas.length);
+
+        res.setHeader('Content-Type','application/json');
+        res.end(JSON.stringify({ results: resultados }));
+        console.log("\n");
+        return;
     }
     fs.readFile(__dirname + '/index.html')
         .then(contents => {
