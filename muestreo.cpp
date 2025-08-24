@@ -3,7 +3,7 @@
 #include <cmath>
 
 using namespace std;
-int belongsTo(double *thetas, int sizeOfThetas){
+int belongsTo(double *thetas){
     /*Private function. Called on multinomial.
     Return the position in which a random number is generated in a set of a sample*/
 
@@ -71,7 +71,7 @@ extern "C" {
         
         for(int i=0;i<k;i++){
             for(int j=0;j<n;j++){
-                results[i][belongsTo(r.data(),slices)]++;
+                results[i][belongsTo(r.data())]++;
             }
         }
     }
@@ -91,7 +91,7 @@ extern "C" {
         srand(time(NULL));
        for(int i=0;i<k;i++){
            for(int j=0;j<n;j++){
-               results[i][belongsTo(thetas,sizeof(thetas)/sizeof(thetas[0]))]++;
+               results[i][belongsTo(thetas)]++;
            }
        }
 

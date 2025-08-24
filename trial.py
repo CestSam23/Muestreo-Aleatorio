@@ -20,25 +20,25 @@ def plot_results(data, title):
 lib = ctypes.CDLL("/home/samuel/Documents/Universidad/mineria/muestreo/libmuestreo.so")
 
 #Definir prototipo
+#void muestreoMultinomialDynamic(double *thetas, int n, int k, double **results)
+lib.muestreoMultinomialDynamic.argtypes = [ctypes.POINTER(ctypes.c_double), ctypes.c_int, ctypes.c_int, ctypes.POINTER(ctypes.POINTER(ctypes.c_double))]
+lib.muestreoMultinomialDynamic.restype = None
 
-#void muestreoMultinomialFixedl(int slices, int n, int k, double **results)
-lib.muestreoMultinomialFixedl.argtypes = [ctypes.c_int, ctypes.c_int, ctypes.c_int, ctypes.POINTER(ctypes.POINTER(ctypes.c_double))]
-lib.muestreoMultinomialFixedl.restype = None
-
-slices = 6
+sizeOfArray=5
+thetas = (ctypes.c_double * sizeOfArray)(0.1, 0.1, 0.5, 0.1, 0.2)  # Example probabilities
 n=1000
 k=20
 results = (ctypes.POINTER(ctypes.c_double) * k)()
 for i in range(k):
-    results[i] = (ctypes.c_double * slices)()  # Allocate array of n doubles
+    results[i] = (ctypes.c_double * sizeOfArray)()  # Allocate array of 6 doubles
 
 
-lib.muestreoMultinomialFixedl(slices, n, k, results)
+lib.muestreoMultinomialDynamic(thetas, n, k, results)
 
 # Convert C double** results to numpy array manually
-output = np.zeros((k, slices))
+output = np.zeros((k, sizeOfArray))
 for i in range(k):
-    output[i, :] = np.ctypeslib.as_array(results[i], shape=(slices,))
+    output[i, :] = np.ctypeslib.as_array(results[i], shape=(sizeOfArray,))
 
 print("Sample Completed. Generating Plots...")
 print(output)
