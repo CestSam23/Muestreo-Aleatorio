@@ -25,6 +25,7 @@ extern "C" {
         theta = probability of success
         n = size of the sample
         */
+       srand(time(NULL));
         for(int i=0;i<n;i++){
             if((double)rand()/(RAND_MAX)<theta){
                 (*success)++;
@@ -40,6 +41,7 @@ extern "C" {
         n = size of the samples
         k = number of trials
         */
+       srand(time(NULL));
        for (int i = 0; i < k; i++){
            for(int j=0;j<n;j++){
                if((double)rand()/(RAND_MAX)<theta){
@@ -58,6 +60,7 @@ extern "C" {
 
         Results is a vector of R2, where R2[i] is the number of successes for the i-th slice
         */
+       srand(time(NULL));
        
         vector<double> r(slices,0.0);
         for(int i=0;i<slices;i++){
@@ -84,6 +87,7 @@ extern "C" {
         THETAS MUST BE WITH VALUES. Where sum(thetas[i..n]) = 1
         */
 
+        srand(time(NULL));
        for(int i=0;i<k;i++){
            for(int j=0;j<n;j++){
                results[i][belongsTo(thetas)]++;
@@ -96,6 +100,7 @@ extern "C" {
         Let n be the size of the samples
         Results is a vector of size n, where results[i] is the i-th sample
         */
+       srand(time(NULL));
        for(int i=0;i<n;i++){
            double u = (double)rand()/(RAND_MAX);
            results[i] = -log(1-u)/lambda;
