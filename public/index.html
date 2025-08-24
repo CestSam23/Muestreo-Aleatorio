@@ -22,7 +22,7 @@
         </p>
         
         <div id="FormularioData">
-            <form id="bernoulli-form" onsubmit="return false;"> 
+            <form id="bernoulli_form" onsubmit="return false;"> 
                 <label for="num_experimentos">Número de Experimentos:</label>
                 <input type="number" id="num_experimentos" name="num_experimentos" min="1" value="100">
                 <br>
@@ -35,7 +35,7 @@
 
         <div id="resultados">
             <h3>Resultados de la Simulación</h3>
-            <p id="result-text">Aquí se mostrarán los resultados después de la simulación.</p>
+            <canvas id="bernoulli_plot" width="400" height="400"></canvas>
         </div>
 
     </div>
@@ -69,7 +69,7 @@
         </p>
         
         <div id="FormularioData">
-            <form id="binomial-form" onsubmit="return false;">
+            <form id="binomial_form" onsubmit="return false;">
                 <label for="num_experimentos">Número de Experimentos:</label>
                 <input type="number" id="num_experimentos" name="num_experimentos" min="1" value="100">
                 <br>
@@ -85,7 +85,7 @@
 
         <div id="resultados">
             <h3>Resultados de la Simulación</h3>
-            <p id="result-text">Aquí se mostrarán los resultados después de la simulación.</p>
+            <canvas id="binomial_plot" width="400" height="400"></canvas>
         </div>
     </div>
     <hr>
@@ -102,7 +102,7 @@
         </p>
         
         <div id="FormularioData">
-            <form id="exponencial-form" onsubmit="return false;">
+            <form id="exponencial_form" onsubmit="return false;">
                 <label for="num_experimentos">Número de Experimentos:</label>
                 <input type="number" id="num_experimentos" name="num_experimentos" min="1" value="100">
                 <br>
@@ -115,7 +115,7 @@
 
         <div id="resultados">
             <h3>Resultados de la Simulación</h3>
-            <p id="result-text">Aquí se mostrarán los resultados después de la simulación.</p>
+            <canvas id="exponencial_plot" width="400" height="400"></canvas>
         </div>
     </div>
     <hr>
@@ -150,7 +150,7 @@
         </p>
         
         <div id="FormularioData">
-            <form id="multinomialf-form" onsubmit="return false;">
+            <form id="multinomialf_form" onsubmit="return false;">
                 <label for="num_experimentos">Número de Experimentos:</label>
                 <input type="number" id="num_experimentos" name="num_experimentos" min="1" value="100">
                 <br>
@@ -166,7 +166,7 @@
 
         <div id="resultados">
             <h3>Resultados de la Simulación</h3>
-            <p id="result-text">Aquí se mostrarán los resultados después de la simulación.</p>
+            <canvas id="multinomialf_plot" width="400" height="400"></canvas>
         </div>
     </div>
     <hr>
@@ -201,7 +201,7 @@
         </p>
         
         <div id="FormularioData">
-            <form id="multinomialv" onsubmit="return false;">
+            <form id="multinomialv_form" onsubmit="return false;">
                 <label for="num_experimentos">Número de Experimentos:</label>
                 <input type="number" id="num_experimentos" name="num_experimentos" min="1" value="100">
                 <br>
@@ -219,9 +219,9 @@
 
         <div id="resultados">
             <h3>Resultados de la Simulación</h3>
-            <p id="result-text">Aquí se mostrarán los resultados después de la simulación.</p>
+            <canvas id="multinomialv_plot" width="400" height="400"></canvas>
         </div>
     </div>
-
+    <script src="/public/js/app.js"></script>
 </body>
 </html>
