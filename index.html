@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Muestreo</title>
+</head>
+<body>
+    <h1>Muestreo de Datos (Simulación)</h1>
+    <hr>
+    <div id="data-sampling">
+        <h2>Bernoulli</h2>
+        <p>Simulación de un experimento de Bernoulli.</p>
+        <p>Generamos n números aleatorios x1,x2,..,xn <br>
+            x1 ∈ A1 → E <br>
+            x2 ∈ A2 → F <br>
+            ...         <br>
+            xn ∈ An → F <br>
+            <br>
+            El conjunto {x1,x2,..,xn} se distribuye en forma de Bernulli <br>
+        </p>
+        
+        <div id="FormularioData">
+            <form>
+                <label for="num-experimentos">Número de Experimentos:</label>
+                <input type="number" id="num-experimentos" name="num-experimentos" min="1" value="100">
+                <br>
+                <label for="prob-exito">Probabilidad de Éxito (θ):</label>
+                <input type="number" id="prob-exito" name="prob-exito" min="0" max="1" step="0.01" value="0.5">
+                <br>
+                <input type="submit" value="Simular">
+            </form>
+        </div>
+
+        <div id="resultados">
+            <h3>Resultados de la Simulación</h3>
+            <p id="result-text">Aquí se mostrarán los resultados después de la simulación.</p>
+        </div>
+
+    </div>
+    <hr>
+
+    <div id="data-sampling">
+        <h2>Binomial</h2>
+        <p>Simulación de un muestreo Binomial.</p>
+        <p>Generamos k números aleatorios x1,x2,..,xk y repetimos el experimento n número de veces <br>
+            1ra repeticion <br>
+            x1 → E <br>
+            x2 → F <br>
+            ...    <br>
+            xk → F <br>
+            <br>
+            
+            2da repeticion <br>
+            x1 → F <br>
+            x2 → E <br>
+            ...    <br>
+            xk → F <br>
+
+            <br>
+            "n"va repeticion <br>
+            x1 → F <br>
+            x2 → F <br>
+            ...    <br>
+            xk → E <br>
+
+            La función de densidad nos muestra los éxitos en los n experimentos.
+        </p>
+        
+        <div id="FormularioData">
+            <form>
+                <label for="num-experimentos">Número de Experimentos:</label>
+                <input type="number" id="num-experimentos" name="num-experimentos" min="1" value="100">
+                <br>
+                <label for="num-muestra">Número de Muestras por experimentos:</label>
+                <input type="number" id="num-muestra" name="num-muestra" min="1" value="10">
+                <br>
+                <label for="prob-exito">Probabilidad de Éxito (θ):</label>
+                <input type="number" id="prob-exito" name="prob-exito" min="0" max="1" step="0.01" value="0.5">
+                <br>
+                <input type="submit" value="Simular">
+            </form>
+        </div>
+
+        <div id="resultados">
+            <h3>Resultados de la Simulación</h3>
+            <p id="result-text">Aquí se mostrarán los resultados después de la simulación.</p>
+        </div>
+    </div>
+    <hr>
+
+
+    <div id="data-sampling">
+        <h2>Exponencial</h2>
+        <p>Simulación de un experimento de función Exponencial.</p>
+        <p>Generamos n números aleatorios u1,u2,..,un. Una muestra aleatoria con parametro λ con distribución exponencial esta dada por: <br>
+            x1 = -log(1-u1)/λ   <br>
+            x2 = -log(1-u2)/λ   <br>
+            ...                 <br>
+            xn = -log(1-un)/λ   <br>
+        </p>
+        
+        <div id="FormularioData">
+            <form>
+                <label for="num-experimentos">Número de Experimentos:</label>
+                <input type="number" id="num-experimentos" name="num-experimentos" min="1" value="100">
+                <br>
+                <label for="lambda">Parámetro λ:</label>
+                <input type="number" id="lambda" name="lambda" min="0" step="0.01" value="1">
+                <br>
+                <input type="submit" value="Simular">
+            </form>
+        </div>
+
+        <div id="resultados">
+            <h3>Resultados de la Simulación</h3>
+            <p id="result-text">Aquí se mostrarán los resultados después de la simulación.</p>
+        </div>
+    </div>
+    <hr>
+
+    <div id="data-sampling">
+        <h2>Mutlinomial Con Probabilidad Fija</h2>
+        <p>Simulación de un muestreo Multinomial.</p>
+        <p>Generamos n números aleatorios x1,x2,..,xk y repetimos el experimento k número de veces.<br>
+            La muestra puede tomar valores en θ1, θ2, ..., θn.
+            1ra repeticion <br>
+            x1 → θ1 <br>
+            x2 → θ4 <br>
+            ...    <br>
+            xn → θn <br>
+            <br>
+            
+            2da repeticion <br>
+            x1 → θ1 <br>
+            x2 → θ2 <br>
+            ...    <br>
+            xn → θn <br>
+
+            <br>
+            "n"va repeticion <br>
+            x1 → θ2 <br>
+            x2 → θ2 <br>
+            ...    <br>
+            xk → θn <br>
+
+            El histograma nos muestra la frecuencia de cada θ en los k experimentos.
+            Se pueden observar las gráficas para los k experimentos
+        </p>
+        
+        <div id="FormularioData">
+            <form>
+                <label for="num-experimentos">Número de Experimentos:</label>
+                <input type="number" id="num-experimentos" name="num-experimentos" min="1" value="100">
+                <br>
+                <label for="num-muestra">Número de Muestras por experimentos:</label>
+                <input type="number" id="num-muestra" name="num-muestra" min="1" value="10">
+                <br>
+                <label for="cant-prob">Cantidad de probabilidades</label>
+                <input type="number" id="cant-prob" name="cant-prob" min="1" step="1" value="6">
+                <br>
+                <input type="submit" value="Simular">
+            </form>
+        </div>
+
+        <div id="resultados">
+            <h3>Resultados de la Simulación</h3>
+            <p id="result-text">Aquí se mostrarán los resultados después de la simulación.</p>
+        </div>
+    </div>
+    <hr>
+
+    <div id="data-sampling">
+        <h2>Mutlinomial Con Probabilidad Arbitraria</h2>
+        <p>Simulación de un muestreo Multinomial.</p>
+        <p>Generamos n números aleatorios x1,x2,..,xk y repetimos el experimento k número de veces.<br>
+            La muestra puede tomar valores en θ1, θ2, ..., θn.
+            1ra repeticion <br>
+            x1 → θ1 <br>
+            x2 → θ4 <br>
+            ...    <br>
+            xn → θn <br>
+            <br>
+            
+            2da repeticion <br>
+            x1 → θ1 <br>
+            x2 → θ2 <br>
+            ...    <br>
+            xn → θn <br>
+
+            <br>
+            "n"va repeticion <br>
+            x1 → θ2 <br>
+            x2 → θ2 <br>
+            ...    <br>
+            xk → θn <br>
+
+            El histograma nos muestra la frecuencia de cada θ en los k experimentos. Los θ pueden ser distintos.
+            Se pueden observar las gráficas para los k experimentos
+        </p>
+        
+        <div id="FormularioData">
+            <form>
+                <label for="num-experimentos">Número de Experimentos:</label>
+                <input type="number" id="num-experimentos" name="num-experimentos" min="1" value="100">
+                <br>
+                <label for="num-muestra">Número de Muestras por experimentos:</label>
+                <input type="number" id="num-muestra" name="num-muestra" min="1" value="10">
+                <br>
+                <label for="cant-prob">Cantidad de probabilidades</label>
+                <input type="number" id="cant-prob" name="cant-prob" min="1" step="1" value="6">
+                <br>
+                <label for="probs-dyn">Probabilidades (separadas por coma, deben sumar 1):</label>
+                <input type="text" id="probs-dyn" name="probs-dyn" value="0.2,0.2,0.2,0.2,0.1,0.1"><br>
+                <input type="submit" value="Simular"><br>
+            </form>
+        </div>
+
+        <div id="resultados">
+            <h3>Resultados de la Simulación</h3>
+            <p id="result-text">Aquí se mostrarán los resultados después de la simulación.</p>
+        </div>
+    </div>
+
+</body>
+</html>
