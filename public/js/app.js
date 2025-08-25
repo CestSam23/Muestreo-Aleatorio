@@ -1,3 +1,27 @@
+// Helper to create and trigger CSV download
+function createCSVDownloadButton({btnId, plotDivId, filename, headers, rows}) {
+    let btn = document.getElementById(btnId);
+    if (!btn) {
+        btn = document.createElement('button');
+        btn.id = btnId;
+        btn.textContent = 'Descargar CSV';
+        btn.style.marginTop = '10px';
+        const plotDiv = document.getElementById(plotDivId);
+        plotDiv.parentNode.insertBefore(btn, plotDiv.nextSibling);
+    }
+    btn.onclick = function() {
+        const csv = [headers.join(','), ...rows.map(r => r.join(','))].join('\n');
+        const blob = new Blob([csv], { type: 'text/csv' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = filename;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+    };
+}
 document.addEventListener('DOMContentLoaded', () => {
     
     /*-----------LÓGICA PARA FORMULARIOS-----------------*/
@@ -63,6 +87,16 @@ async function handleBernoulli(e){
         };
         
         Plotly.newPlot('bernoulli_plot', charData,layout);
+        createCSVDownloadButton({
+            btnId: 'bernoulli_csv_btn',
+            plotDivId: 'bernoulli_plot',
+            filename: 'bernoulli_data.csv',
+            headers: ['Resultado', 'Frecuencia'],
+            rows: [
+                ['Exitos', data.success],
+                ['Fracasos', data.failure]
+            ]
+        });
 
     } catch (error) {
         console.error("Error en formulario de Bernoulli:", error);
@@ -89,6 +123,17 @@ async function handleBinomial(e){
         };
 
         Plotly.newPlot('binomial_plot', charData,layout);
+        // Count frequency of each result
+        const freq = {};
+        resultados.forEach(val => { freq[val] = (freq[val] || 0) + 1; });
+        const rows = Object.keys(freq).sort((a,b)=>a-b).map(k => [k, freq[k]]);
+        createCSVDownloadButton({
+            btnId: 'binomial_csv_btn',
+            plotDivId: 'binomial_plot',
+            filename: 'binomial_data.csv',
+            headers: ['Número de éxitos', 'Frecuencia'],
+            rows
+        });
     } catch (error) {
         console.error("Error en formulario de Binomial:", error);
     }
@@ -112,6 +157,35 @@ async function handleExponencial(e){
         };
 
         Plotly.newPlot('exponencial_plot', charData,layout);
+        // Each value is a sample, so just output as a single column
+        createCSVDownloadButton({
+            btnId: 'exponencial_csv_btn',
+            plotDivId: 'exponencial_plot',
+            filename: 'exponencial_data.csv',
+            headers: ['Valor'],
+            rows: resultados.map(v => [v])
+        });
+        // --- JSON Download Button Logic ---
+        let btn = document.getElementById('exponencial_json_btn');
+        if (!btn) {
+            btn = document.createElement('button');
+            btn.id = 'exponencial_json_btn';
+            btn.textContent = 'Descargar JSON';
+            btn.style.marginTop = '10px';
+            const plotDiv = document.getElementById('exponencial_plot');
+            plotDiv.parentNode.insertBefore(btn, plotDiv.nextSibling);
+        }
+        btn.onclick = function() {
+            const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'exponencial_data.json';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        };
     } catch (error) {
         console.error("Error en formulario de Exponencial:", error);
     }
@@ -233,6 +307,38 @@ async function handleMultinomialF(e) {
         plotDiv.innerHTML = '';
         
         Plotly.newPlot(plotDiv, [trace], layout, config);
+
+        // Each row is an experiment, columns are probabilidades
+        const headers = ['Experimento', ...Array.from({length: probabilidades}, (_, i) => `Prob${i+1}`)];
+        const rows = resultados.map((row, i) => [i+1, ...row]);
+        createCSVDownloadButton({
+            btnId: 'multinomialf_csv_btn',
+            plotDivId: 'multinomialf_plot',
+            filename: 'multinomialf_data.csv',
+            headers,
+            rows
+        });
+
+        // --- JSON Download Button Logic ---
+        let btn = document.getElementById('multinomialf_json_btn');
+        if (!btn) {
+            btn = document.createElement('button');
+            btn.id = 'multinomialf_json_btn';
+            btn.textContent = 'Descargar JSON';
+            btn.style.marginTop = '10px';
+            plotDiv.parentNode.insertBefore(btn, plotDiv.nextSibling);
+        }
+        btn.onclick = function() {
+            const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'multinomialf_data.json';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        };
         
     } catch (error) {
         console.error("Error en formulario de Multinomial F:", error);
@@ -378,6 +484,38 @@ async function handleMultinomialV(e) {
         plotDiv.innerHTML = '';
         
         Plotly.newPlot(plotDiv, [trace], layout, config);
+
+        // Each row is an experiment, columns are categorias
+        const headers = ['Experimento', ...Array.from({length: categorias}, (_, i) => `Cat${i+1}`)];
+        const rows = resultados.map((row, i) => [i+1, ...row]);
+        createCSVDownloadButton({
+            btnId: 'multinomialv_csv_btn',
+            plotDivId: 'multinomialv_plot',
+            filename: 'multinomialv_data.csv',
+            headers,
+            rows
+        });
+
+        // --- JSON Download Button Logic ---
+        let btn = document.getElementById('multinomialv_json_btn');
+        if (!btn) {
+            btn = document.createElement('button');
+            btn.id = 'multinomialv_json_btn';
+            btn.textContent = 'Descargar JSON';
+            btn.style.marginTop = '10px';
+            plotDiv.parentNode.insertBefore(btn, plotDiv.nextSibling);
+        }
+        btn.onclick = function() {
+            const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'multinomialv_data.json';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        };
         
     } catch (error) {
         console.error("Error en formulario de Multinomial V:", error);
@@ -401,6 +539,34 @@ async function handleNormale(e) {
             yaxis: {title: {text: "Frecuencia"}}
         };
         Plotly.newPlot('normale_plot', charData, layout);
+        createCSVDownloadButton({
+            btnId: 'normale_csv_btn',
+            plotDivId: 'normale_plot',
+            filename: 'normale_data.csv',
+            headers: ['Valor'],
+            rows: resultados.map(v => [v])
+        });
+        // --- JSON Download Button Logic ---
+        let btn = document.getElementById('normale_json_btn');
+        if (!btn) {
+            btn = document.createElement('button');
+            btn.id = 'normale_json_btn';
+            btn.textContent = 'Descargar JSON';
+            btn.style.marginTop = '10px';
+            const plotDiv = document.getElementById('normale_plot');
+            plotDiv.parentNode.insertBefore(btn, plotDiv.nextSibling);
+        }
+        btn.onclick = function() {
+            const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'normale_data.json';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        };
     } catch (error) {
         console.error("Error en formulario de Normal Estandar:", error);
     }
@@ -422,6 +588,34 @@ async function handleNormalMV(e) {
             yaxis: {title: {text: "Frecuencia"}}
         };
         Plotly.newPlot('normalmv_plot', charData, layout);
+        createCSVDownloadButton({
+            btnId: 'normalmv_csv_btn',
+            plotDivId: 'normalmv_plot',
+            filename: 'normalmv_data.csv',
+            headers: ['Valor'],
+            rows: resultados.map(v => [v])
+        });
+        // --- JSON Download Button Logic ---
+        let btn = document.getElementById('normalmv_json_btn');
+        if (!btn) {
+            btn = document.createElement('button');
+            btn.id = 'normalmv_json_btn';
+            btn.textContent = 'Descargar JSON';
+            btn.style.marginTop = '10px';
+            const plotDiv = document.getElementById('normalmv_plot');
+            plotDiv.parentNode.insertBefore(btn, plotDiv.nextSibling);
+        }
+        btn.onclick = function() {
+            const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'normalmv_data.json';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        };
     } catch (error) {
         console.error("Error en formulario de Normal Multivariante:", error);
     }
