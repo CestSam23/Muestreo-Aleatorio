@@ -107,4 +107,32 @@ extern "C" {
            results[i] = -log(1-u)/lambda;
        }
     }
+
+    void muestreoNormalEstandar(int n, double *results){
+        /*  
+        Let n be the size of the samples.
+        Let results be a vector of size n, where results[i] is the i-th sample.
+        x1 = sqrt(2log(1/u1)) cos (2pi*v1)
+        Where u1 and v1 are uniform random variables in (0,1).
+        results[i] = xi;
+        */
+        for(int i=0;i<n;i++){
+            double u = (double)rand()/RAND_MAX;
+            double v = (double)rand()/RAND_MAX;
+            results[i] = sqrt(2*log(1/u))*cos(2*M_PI*v);
+        }
+    }
+
+    void muestreoNormal(int n, double media, double varianza, double *results){
+        /*
+        Let n be the size of the samples.
+        Let results be a vector of size n, where results[i] is the i-th sample.
+        */
+       double sigma = sqrt(varianza);
+       double x[n];
+       muestreoNormalEstandar(n,x);
+       for(int i=0;i<n;i++){
+           results[i] = media + sigma * x[i];
+       }
+    }
 }

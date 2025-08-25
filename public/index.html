@@ -223,6 +223,62 @@
             <div id="multinomialv_plot"></div>
         </div>
     </div>
+
+    <div id="data-sampling">
+        <h2>Densidad Normal Estandar</h2>
+        <p>Simulación de un muestreo de densidad normal estandar.</p>
+        <p>Se generan dos muestras de números aleatorios {u1,u2,...,un} y {v1,v2,...,vn} <br>
+            La muestra aleatoria con distribución normal estandar esta dada por: <br>
+            x1 = sqrt(-2*log(1/u1))*cos(2π*v1) <br>
+            x2 = sqrt(-2*log(1/u2))*cos(2π*v2) <br>
+            ... <br>
+            xn = sqrt(-2*log(1/un))*cos(2π*vn) <br>
+            De esta forma, {x1,x2,...,xn} se obtiene una muestra aleatoria con distribución normal estandar.
+        </p>
+        
+        <div id="FormularioData">
+            <form id="normale_form" onsubmit="return false;">
+                <label for="num_muestra">Número de Muestras por experimentos:</label>
+                <input type="number" id="num_muestra" name="num_muestra" min="1" value="10">
+                <input type="submit" value="Simular">
+                <br>
+            </form>
+        </div>
+
+        <div id="resultados">
+            <h3>Resultados de la Simulación</h3>
+            <div id="normale_plot"></div>
+        </div>
+    </div>
+
+    <div id="data-sampling">
+        <h2>Densidad Normal con media μ y varianza σ²</h2>
+        <p>Simulación de un muestreo de densidad normal con media y varianza especificadas.</p>
+        <p>Dada una muestra generada por densidad normal estandar, la muestra con media μ y varianza σ² se obtiene mediante la transformación:</p>
+        <p>y1 = μ + σ * x1</p>
+        <p>y2 = μ + σ * x2</p>
+        <p>...</p>
+        <p>yn = μ + σ * xn</p>
+        <div id="FormularioData">
+            <form id="normalmv_form" onsubmit="return false;">
+                <label for="num_muestra">Número de Muestras por experimentos:</label>
+                <input type="number" id="num_muestra" name="num_muestra" min="1" value="10">
+                <label for="media">Media (μ):</label>
+                <input type="number" id="media" name="media" value="0">
+                <label for="varianza">Varianza (σ²):</label>
+                <input type="number" id="varianza" name="varianza" value="1" step="any">
+                <input type="submit" value="Simular">
+                <br>
+            </form>
+        </div>
+
+        <div id="resultados">
+            <h3>Resultados de la Simulación</h3>
+            <div id="normalmv_plot"></div>
+        </div>
+    </div>
+
+
     <script src="/public/js/app.js"></script>
 </body>
 </html>

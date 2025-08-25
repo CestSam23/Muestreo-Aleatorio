@@ -26,7 +26,9 @@ const lib = ffi.Library('./libmuestreo.so', {
     muestreoBinomial: ["void", ['pointer',"double","int","int"]],
     muestreoExponencial: ["void", ["double","int","pointer"]],
     muestreoMultinomialFixedl: ["void",["int","int","int","pointer"]],
-    muestreoMultinomialDynamic: ["void", ["pointer","int","int","pointer"]]
+    muestreoMultinomialDynamic: ["void", ["pointer","int","int","pointer"]],
+    muestreoNormalEstandar: ["void", ["int","pointer"]],
+    muestreoNormal: ["void", ["int", "double","double","pointer"]]
 });
 
 //Para crear arrays de double
