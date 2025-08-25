@@ -118,6 +118,7 @@ const requestListener = function (req, res) {
 
     if(req.url.startsWith('/api/')){
         if(req.url.startsWith('/api/bernoulli')){
+            console.log("url: " + req.url);
             const params = parseQueryParams(req.url);
             const theta = params.prob_exito;
             const n = params.num_experimentos;
@@ -218,7 +219,37 @@ const requestListener = function (req, res) {
             res.end(JSON.stringify({ results: resultados }));
             console.log("\n");
             return;
-    }
+        }
+        if(req.url.startsWith('/api/normale')){
+            const params = parseQueryParams(req.url);
+            const n = params.num_muestra;
+            const results = createDoubleArray(n);
+
+            console.log(params)
+            lib.muestreoNormalEstandar(n,results);
+
+            const resultados = readDoubleArray(results, n);
+            res.setHeader('Content-Type', 'application/json');
+            res.end(JSON.stringify({ results: resultados }));
+            return;
+        }
+        if(req.url.startsWith('/api/normalmv')){
+            const params = parseQueryParams(req.url);
+            const n = params.num_muestra;
+            const media = params.media;
+            const varianza = params.varianza; 
+            const results = createDoubleArray(n);
+            console.log(params);
+            lib.muestreoNormal(n,media,varianza,results);
+
+            const resultados = readDoubleArray(results,n);
+
+
+            res.setHeader('Content-Type', 'application/json');
+            res.end(JSON.stringify({ results: resultados }));
+            return;
+
+        }
         res.writeHead(404);
         res.end(JSON.stringify({ error: 'Endpoint API no encontrado' }));
         return;
