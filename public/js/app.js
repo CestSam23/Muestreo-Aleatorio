@@ -6,7 +6,9 @@ document.addEventListener('DOMContentLoaded', () => {
         'binomial_form' : handleBinomial,
         'exponencial_form' : handleExponencial,
         'multinomialf_form' : handleMultinomialF,
-        'multinomialv_form' : handleMultinomialV
+        'multinomialv_form' : handleMultinomialV,
+        'normale_form' : handleNormale,
+        'normalmv_form' : handleNormalMV
     };
 
     //Asignar event listeners a cada formulario
@@ -379,5 +381,47 @@ async function handleMultinomialV(e) {
     } catch (error) {
         console.error("Error en formulario de Multinomial V:", error);
         alert("Error al crear la gráfica: " + error.message);
+    }
+}
+
+async function handleNormale(e) {
+    e.preventDefault();
+    try{
+        console.log("Manejando formulario Normal Estandar");
+        const data = await makeRequest('normale',new FormData(this));
+        const resultados = data.results;
+        const charData = [{
+            x: resultados,
+            type: 'histogram'
+        }];
+        const layout = {
+            title: "Distribución Normal Estandar",
+            xaxis: {title: {text: "Valor"}},
+            yaxis: {title: {text: "Frecuencia"}}
+        };
+        Plotly.newPlot('normale_plot', charData, layout);
+    } catch (error) {
+        console.error("Error en formulario de Normal Estandar:", error);
+    }
+}
+
+async function handleNormalMV(e) {
+    e.preventDefault();
+    try{
+        console.log("Manejando formulario Normal Multivariante");
+        const data = await makeRequest('normalmv',new FormData(this));
+        const resultados = data.results;
+        const charData = [{
+            x: resultados,
+            type: 'histogram'
+        }];
+        const layout = {
+            title: "Distribución Normal Multivariante",
+            xaxis: {title: {text: "Valor"}},
+            yaxis: {title: {text: "Frecuencia"}}
+        };
+        Plotly.newPlot('normalmv_plot', charData, layout);
+    } catch (error) {
+        console.error("Error en formulario de Normal Multivariante:", error);
     }
 }
