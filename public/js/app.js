@@ -134,6 +134,7 @@ async function handleMultinomialF(e) {
         // Coordenadas para los ejes
         const xValues = Array.from({length: experimentos}, (_, i) => i + 1);
         const yValues = Array.from({length: probabilidades}, (_, i) => i + 1);
+        console.log(xValues,yValues)
         
         const trace = {             //Datos de la gráfica
             x: xValues,             // Experimentos: [1, 2, 3, ...] K

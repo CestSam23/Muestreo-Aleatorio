@@ -132,8 +132,7 @@ const requestListener = function (req, res) {
             res.end(JSON.stringify({ success: succes.deref(), failure: failure.deref() }));
             console.log("\n");
             return;
-        } 
-        if(req.url.startsWith('/api/binomial')){
+        } else if(req.url.startsWith('/api/binomial')){
             const params = parseQueryParams(req.url);
             const succes = createDoubleArray(params.num_experimentos);
             const theta = params.prob_exito
@@ -149,8 +148,7 @@ const requestListener = function (req, res) {
             res.end(JSON.stringify({ results: resultados}));
             console.log("\n");
             return;
-        }
-        if(req.url.startsWith('/api/exponencial')){
+        } else if(req.url.startsWith('/api/exponencial')){
             const params = parseQueryParams(req.url);
             const results = createDoubleArray(params.num_experimentos);
             const lambda = params.prob_exito;
@@ -165,8 +163,7 @@ const requestListener = function (req, res) {
             res.end(JSON.stringify({ results: resultados }));
             console.log("\n");
             return;
-        }
-        if(req.url.startsWith('/api/multinomialf')){
+        } else if(req.url.startsWith('/api/multinomialf')){
             const params = parseQueryParams(req.url);
             const slices = params.cant_prob;
             const n = params.num_muestra;
@@ -185,8 +182,7 @@ const requestListener = function (req, res) {
             res.end(JSON.stringify({ results: resultados }));
             console.log("\n");
             return;
-        }
-        if(req.url.startsWith('/api/multinomialv')){
+        } else if(req.url.startsWith('/api/multinomialv')){
             const params = parseQueryParams(req.url);
             const n = params.num_muestra;
             const k = params.num_experimentos;
@@ -219,8 +215,7 @@ const requestListener = function (req, res) {
             res.end(JSON.stringify({ results: resultados }));
             console.log("\n");
             return;
-        }
-        if(req.url.startsWith('/api/normale')){
+        } else if(req.url.startsWith('/api/normale')){
             const params = parseQueryParams(req.url);
             const n = params.num_muestra;
             const results = createDoubleArray(n);
@@ -232,8 +227,7 @@ const requestListener = function (req, res) {
             res.setHeader('Content-Type', 'application/json');
             res.end(JSON.stringify({ results: resultados }));
             return;
-        }
-        if(req.url.startsWith('/api/normalmv')){
+        } else if(req.url.startsWith('/api/normalmv')){
             const params = parseQueryParams(req.url);
             const n = params.num_muestra;
             const media = params.media;
@@ -249,10 +243,11 @@ const requestListener = function (req, res) {
             res.end(JSON.stringify({ results: resultados }));
             return;
 
+        } else{
+            res.writeHead(404);
+            res.end(JSON.stringify({ error: 'Endpoint API no encontrado' }));
+            return;
         }
-        res.writeHead(404);
-        res.end(JSON.stringify({ error: 'Endpoint API no encontrado' }));
-        return;
 
 
     }
