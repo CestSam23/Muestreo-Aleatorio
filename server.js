@@ -191,7 +191,11 @@ const requestListener = function (req, res) {
             //Obtener thetas
             let thetas;
             if(params.probs_dyn){
-                thetas = JSON.parse(params.probs_dyn);
+                if (params.probs_dyn.startsWith('[')) {
+                    thetas = JSON.parse(params.probs_dyn);
+                } else {
+                    thetas = params.probs_dyn.split(',').map(Number);
+                }
             }
 
             //Creación de buffer
@@ -213,7 +217,11 @@ const requestListener = function (req, res) {
             console.log("\n");
             return;
     }
+        res.writeHead(404);
+        res.end(JSON.stringify({ error: 'Endpoint API no encontrado' }));
         return;
+
+
     }
 
     // Servir página principal
