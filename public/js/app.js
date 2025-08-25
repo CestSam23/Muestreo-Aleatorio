@@ -1,4 +1,6 @@
 document.addEventListener('DOMContentLoaded', () => {
+    
+    /*-----------LÓGICA PARA FORMULARIOS-----------------*/
     const forms ={
         'bernoulli_form' : handleBernoulli,
         'binomial_form' : handleBinomial,
@@ -16,6 +18,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 });
 
+/*---------------FUNCIÓN PARA REALIZAR PETICIONES --------------------*/
 async function makeRequest(endpoint, formData) {
     try {
         const params = new URLSearchParams();
@@ -36,6 +39,8 @@ async function makeRequest(endpoint, formData) {
     }
 }
 
+
+//---------------------MANEJADOR DE PETICIONES------------------------
 async function handleBernoulli(e){
     e.preventDefault();
     try{
@@ -118,7 +123,7 @@ async function handleMultinomialF(e) {
         // Crear el 3D Surface Plot
         const resultados = data.results;
         const experimentos = resultados.length;
-        const categorias = resultados[0].length;
+        const probabilidades = resultados[0].length;
         
         
         // Preparar datos para surface plot
@@ -126,12 +131,12 @@ async function handleMultinomialF(e) {
         
         // Coordenadas para los ejes
         const xValues = Array.from({length: experimentos}, (_, i) => i + 1);
-        const yValues = Array.from({length: categorias}, (_, i) => i + 1);
+        const yValues = Array.from({length: probabilidades}, (_, i) => i + 1);
         
-        const trace = {
-            x: xValues,  // Experimentos: [1, 2, 3, ...]
-            y: yValues,  // Categorías: [1, 2, 3, ...]
-            z: zData,    // Matriz 2D de frecuencias
+        const trace = {             //Datos de la gráfica
+            x: xValues,             // Experimentos: [1, 2, 3, ...] K
+            y: yValues,             // Probabilidades: [1, 2, 3, ...] Theta's
+            z: zData,               // Resultado de muestreos
             type: 'surface',
             colorscale: 'Viridis',
             colorbar: {
@@ -170,7 +175,7 @@ async function handleMultinomialF(e) {
         
         const layout = {
             title: {
-                text: `Distribución Multinomial Fixed<br>${experimentos} experimentos × ${categorias} categorías`,
+                text: `Distribución Multinomial<br>${experimentos} experimentos × ${probabilidades} probabilidades`,
                 font: { size: 16 }
             },
             scene: {
@@ -182,7 +187,7 @@ async function handleMultinomialF(e) {
                     ticktext: xValues.map(val => `Exp ${val}`)
                 },
                 yaxis: {
-                    title: 'Categoría',
+                    title: 'Probabilidad',
                     type: 'category',
                     tickmode: 'array',
                     tickvals: yValues,
@@ -199,7 +204,7 @@ async function handleMultinomialF(e) {
                 aspectmode: 'manual',
                 aspectratio: {
                     x: experimentos * 0.3,
-                    y: categorias * 0.5,
+                    y: probabilidades * 0.5,
                     z: 0.8
                 }
             },
@@ -235,14 +240,12 @@ async function handleMultinomialF(e) {
 async function handleMultinomialV(e) {
     e.preventDefault();
     try {
-        console.log("Manejando formulario de Multinomial V");
         const formData = new FormData(this);
         const data = await makeRequest('multinomialv', formData);
         
         // Obtener las probabilidades del formulario
         const probsDyn = formData.get('probs_dyn');
         let probabilidades = [];
-        
         if (probsDyn) {
             probabilidades = probsDyn.split(',').map(Number);
         }
