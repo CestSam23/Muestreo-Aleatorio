@@ -57,6 +57,16 @@ int main() {
     std::getline(std::cin, input_expression);
 
     try {
+        /*
+        Consideramos como parámetros:
+            n: Número de muestras
+            fd: Función de densidad
+            x: punto arbitrario x
+            y: punto arbitrario y
+            resultsX*: arreglo de tamaño n representando x
+            resultsY*: arreglo de tamaño n representando y
+        */
+
         // Create parser and register variables. INITIALIZATION
         parser reader;
         ex parsed_expression = reader(input_expression);
