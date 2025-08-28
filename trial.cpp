@@ -61,8 +61,8 @@ int main() {
         Consideramos como parámetros:
             n: Número de muestras
             fd: Función de densidad
-            x: punto arbitrario x
-            y: punto arbitrario y
+            xp: punto arbitrario x
+            yp: punto arbitrario y
             resultsX*: arreglo de tamaño n representando x
             resultsY*: arreglo de tamaño n representando y
         */
@@ -121,18 +121,41 @@ int main() {
             std::cout << "Inversa P(x|y): " << inversaX << std::endl;
         } else {
             std::cout << "No se pudo encontrar la inversa P(x|y)." << std::endl;
+            return 1;
         }
 
         if (ok2) {
             std::cout << "Inversa P(y|x): " << inversaY << std::endl;
         } else {
             std::cout << "No se pudo encontrar la inversa P(y|x)." << std::endl;
+            return 1;
         }
 
 
         //En inversa1 e inversa2 realizamos el algoritmo.
+        float xp = 4;
+        float yp = 5;
+        int n = 1000;
+        float resultsX[n];
+        float resultsY[n];
+        srand(time(NULL));
+        ex calX, calY;
 
-    
+        calX = inversaX.subs(lst{y==yp, u==numeric(rand()/(float)RAND_MAX)});
+        calY = inversaY.subs(lst{x==xp, v==numeric(rand()/(float)RAND_MAX)});
+
+        resultsX[0] = ex_to<numeric>(calX.evalf()).to_double();
+        resultsY[0] = ex_to<numeric>(calY.evalf()).to_double();
+
+        for(int i=1;i<n;i++){
+            calX = inversaX.subs(lst{y==resultsY[i-1], u==numeric(rand()/(float)RAND_MAX)});
+            calY = inversaY.subs(lst{x==resultsX[i-1], v==numeric(rand()/(float)RAND_MAX)});
+
+            resultsX[i] = ex_to<numeric>(calX.evalf()).to_double();
+            resultsY[i] = ex_to<numeric>(calY.evalf()).to_double();
+        }
+        
+        //En resultsX y resultsY se almacenan los puntos. (resultsX[i],resultsY[i])
 
     } catch (std::exception &e) {
         std::cerr << "Error: " << e.what() << std::endl;
