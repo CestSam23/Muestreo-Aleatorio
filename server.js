@@ -28,7 +28,9 @@ const lib = ffi.Library('./libmuestreo.so', {
     muestreoMultinomialFixedl: ["void",["int","int","int","pointer"]],
     muestreoMultinomialDynamic: ["void", ["pointer","int","int","pointer"]],
     muestreoNormalEstandar: ["void", ["int","pointer"]],
-    muestreoNormal: ["void", ["int", "double","double","pointer"]]
+    muestreoNormal: ["void", ["int", "double","double","pointer"]],
+    muestreoGibbs: ["void", ["int", "pointer","double","double","double",
+                            "double","double","double","pointer","pointer"]]
 });
 
 //Para crear arrays de double
@@ -233,6 +235,7 @@ const requestListener = function (req, res) {
             const media = params.media;
             const varianza = params.varianza; 
             const results = createDoubleArray(n);
+        
             console.log(params);
             lib.muestreoNormal(n,media,varianza,results);
 
@@ -243,7 +246,28 @@ const requestListener = function (req, res) {
             res.end(JSON.stringify({ results: resultados }));
             return;
 
-        } else{
+        } else if (req.url.startsWith('/api/gibbs')){
+            const params = parseQueryParams(req.url);
+            const n = params.num_muestra;
+            const funcion = params.funcion;
+            const xp = params.pointX;
+            const yp = params.pointY;
+            const limitex1 = params.limitex1;
+            const limitex2 = params.limitex2;
+            const limitey1 = params.limitey1;
+            const limitey2 = params.limitey2;
+            const resultsX = createDoubleArray(n);
+            const resultsY = createDoubleArray(n);
+            console.log(params);
+            lib.muestreoGibbs(n, funcion, limitex1, limitex2, limitey1, limitey2, xp, yp, resultsX, resultsY);
+
+            const resultadosX = readDoubleArray(resultsX,n);
+            const resultadosY = readDoubleArray(resultsY,n);
+
+            res.setHeader('Content-Type', 'application/json');
+            res.end(JSON.stringify({ resultsX: resultadosX, resultsY: resultadosY }));
+            return;
+        }else{
             res.writeHead(404);
             res.end(JSON.stringify({ error: 'Endpoint API no encontrado' }));
             return;

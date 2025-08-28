@@ -188,7 +188,8 @@ extern "C" {
        }
     }
     
-    void muestreoGibbs(int n, const char* fd_cstr, double xp, double yp, 
+    void muestreoGibbs(int n, const char* fd_cstr, double limitex1, double limitex2,
+                        double limitey1, double limitey2, double xp, double yp, 
                         double *resultsX, double *resultsY){
         /*
         Consideramos como parámetros:
@@ -219,8 +220,8 @@ extern "C" {
             std::cout << "Parsed expression: " << parsed_expression << std::endl;
 
             //1.) Marginal distributions from x and y. (f1(x), f2(y))
-            ex marginal_x = integral(x, 0, 2, parsed_expression).eval_integ();
-            ex marginal_y = integral(y, 0, 2, parsed_expression).eval_integ();
+            ex marginal_x = integral(x, limitex1, limitex2, parsed_expression).eval_integ();
+            ex marginal_y = integral(y, limitey1, limitey2, parsed_expression).eval_integ();
 
             //DEBUG
             std::cout << "Marginal with respect to x: " << marginal_x << std::endl;

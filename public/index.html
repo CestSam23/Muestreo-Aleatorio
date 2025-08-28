@@ -278,6 +278,34 @@
         </div>
     </div>
 
+    <div id="data-sampling">
+        <h2>Muestreo de Gibbs</h2>
+        <p>Simulación de una muestra generada por el método de Gibbs</p>
+        <div id="FormularioData">
+            <form id="normalmv_form" onsubmit="return false;">
+                <label for="num_muestra">Número de Muestras por experimentos:</label>
+                <input type="number" id="num_muestra" name="num_muestra" min="1" value="10">
+                <label for="funcion">Función de densidad: </label>
+                <input type="text" id="funcion" name="funcion" value="(1/28)*(2*x+3*y+2)">
+                <label for="varianza">Limite x inferior</label>
+                <input type="number" id="varianza" name="varianza" value="1" step="any">
+                <label for="varianza">Limite x superior</label>
+                <input type="number" id="varianza" name="varianza" value="1" step="any">
+                <label for="varianza">Limite y inferior</label>
+                <input type="number" id="varianza" name="varianza" value="1" step="any">
+                <label for="varianza">Limite y superior</label>
+                <input type="number" id="varianza" name="varianza" value="1" step="any">
+                <input type="submit" value="Simular">
+                <br>
+            </form>
+        </div>
+
+        <div id="resultados">
+            <h3>Resultados de la Simulación</h3>
+            <div id="normalmv_plot"></div>
+        </div>
+    </div>
+
 
     <script src="/public/js/app.js"></script>
 </body>
