@@ -153,10 +153,10 @@
         <div id="FormularioData">
             <form id="multinomialf_form" onsubmit="return false;">
                 <label for="num_experimentos">Número de Experimentos:</label>
-                <input type="number" id="num_experimentos" name="num_experimentos" min="1" value="100">
+                <input type="number" id="num_experimentos" name="num_experimentos" min="1" value="6">
                 <br>
                 <label for="num_muestra">Número de Muestras por experimentos:</label>
-                <input type="number" id="num_muestra" name="num_muestra" min="1" value="10">
+                <input type="number" id="num_muestra" name="num_muestra" min="1" value="10000">
                 <br>
                 <label for="cant_prob">Cantidad de probabilidades</label>
                 <input type="number" id="cant_prob" name="cant_prob" min="1" step="1" value="6">
@@ -204,10 +204,10 @@
         <div id="FormularioData">
             <form id="multinomialv_form" onsubmit="return false;">
                 <label for="num_experimentos">Número de Experimentos:</label>
-                <input type="number" id="num_experimentos" name="num_experimentos" min="1" value="100">
+                <input type="number" id="num_experimentos" name="num_experimentos" min="1" value="6">
                 <br>
                 <label for="num_muestra">Número de Muestras por experimentos:</label>
-                <input type="number" id="num_muestra" name="num_muestra" min="1" value="10">
+                <input type="number" id="num_muestra" name="num_muestra" min="1" value="1000">
                 <br>
                 <label for="cant_prob">Cantidad de probabilidades</label>
                 <input type="number" id="cant_prob" name="cant_prob" min="1" step="1" value="6">
@@ -282,19 +282,23 @@
         <h2>Muestreo de Gibbs</h2>
         <p>Simulación de una muestra generada por el método de Gibbs</p>
         <div id="FormularioData">
-            <form id="normalmv_form" onsubmit="return false;">
+            <form id="gibbs_form" onsubmit="return false;">
                 <label for="num_muestra">Número de Muestras por experimentos:</label>
                 <input type="number" id="num_muestra" name="num_muestra" min="1" value="10">
                 <label for="funcion">Función de densidad: </label>
                 <input type="text" id="funcion" name="funcion" value="(1/28)*(2*x+3*y+2)">
-                <label for="varianza">Limite x inferior</label>
-                <input type="number" id="varianza" name="varianza" value="1" step="any">
-                <label for="varianza">Limite x superior</label>
-                <input type="number" id="varianza" name="varianza" value="1" step="any">
-                <label for="varianza">Limite y inferior</label>
-                <input type="number" id="varianza" name="varianza" value="1" step="any">
-                <label for="varianza">Limite y superior</label>
-                <input type="number" id="varianza" name="varianza" value="1" step="any">
+                <label for="limitex1">Limite x inferior</label>
+                <input type="number" id="limitex1" name="limitex1" value="0" step="1">
+                <label for="limitex2">Limite x superior</label>
+                <input type="number" id="limitex2" name="limitex2" value="2" step="1">
+                <label for="limitey1">Limite y inferior</label>
+                <input type="number" id="limitey1" name="limitey1" value="0" step="1">
+                <label for="limitey2">Limite y superior</label>
+                <input type="number" id="limitey2" name="limitey2" value="2" step="1">
+                <label for="pointX">Punto inicial x:</label>
+                <input type="number" id="pointX" name="pointX" value="4" step="1">
+                <label for="pointY">Punto inicial y:</label>
+                <input type="number" id="pointY" name="pointY" value="5" step="1">
                 <input type="submit" value="Simular">
                 <br>
             </form>
@@ -302,7 +306,7 @@
 
         <div id="resultados">
             <h3>Resultados de la Simulación</h3>
-            <div id="normalmv_plot"></div>
+            <div id="gibbs_plot"></div>
         </div>
     </div>
 

@@ -29,7 +29,7 @@ const lib = ffi.Library('./libmuestreo.so', {
     muestreoMultinomialDynamic: ["void", ["pointer","int","int","pointer"]],
     muestreoNormalEstandar: ["void", ["int","pointer"]],
     muestreoNormal: ["void", ["int", "double","double","pointer"]],
-    muestreoGibbs: ["void", ["int", "pointer","double","double","double",
+    muestreoGibbs: ["void", ["int", "string","double","double","double",
                             "double","double","double","pointer","pointer"]]
 });
 

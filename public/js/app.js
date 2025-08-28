@@ -32,7 +32,8 @@ document.addEventListener('DOMContentLoaded', () => {
         'multinomialf_form' : handleMultinomialF,
         'multinomialv_form' : handleMultinomialV,
         'normale_form' : handleNormale,
-        'normalmv_form' : handleNormalMV
+        'normalmv_form' : handleNormalMV,
+        'gibbs_form' : handleGibbs
     };
 
     //Asignar event listeners a cada formulario
@@ -188,6 +189,49 @@ async function handleExponencial(e){
         };
     } catch (error) {
         console.error("Error en formulario de Exponencial:", error);
+    }
+}
+
+async function handleGibbs(e) {
+    e.preventDefault();
+    try{
+        console.log("Manejando formulario de Gibbs");
+        const data = await makeRequest('gibbs', new FormData(this));
+        const resultadosX = data.resultsX;
+        const resultadosY = data.resultsY;
+
+        // Each value is a sample, so just output as a single column
+        createCSVDownloadButton({
+            btnId: 'gibbs_csv_button',
+            plotDivId: 'gibbs_plot',
+            filename: 'gibbs_data.csv',
+            headers: ['Valor X', 'Valor Y'],
+            rows: resultadosX.map((v, i) => [v, resultadosY[i]])
+        });
+        // --- JSON Download Button Logic ---
+        let btn = document.getElementById('gibbs_json_btn');
+        if (!btn) {
+            btn = document.createElement('button');
+            btn.id = 'gibbs_json_btn';
+            btn.textContent = 'Descargar JSON';
+            btn.style.marginTop = '10px';
+            const plotDiv = document.getElementById('gibbs_plot');
+            plotDiv.parentNode.insertBefore(btn, plotDiv.nextSibling);
+        }
+        btn.onclick = function() {
+            const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'exponencial_data.json';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        };
+        
+    } catch(error){
+        console.error("Error en formulario de Gibbs:", error);
     }
 }
 
