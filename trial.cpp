@@ -1,8 +1,54 @@
 #include <iostream>
 #include <ginac/ginac.h>
-#include <ginac/parser.h>   // include parser
+#include <ginac/parser.h>
+
 
 using namespace GiNaC;
+
+
+// Solve a*z + b = 0  ->  z = -b/a   (symbolic)
+static ex solve_linear_symbolic(const ex& poly, const symbol& z) {
+    ex a = poly.coeff(z, 1);
+    ex b = poly.coeff(z, 0);
+    return expand(-b/a);
+}
+
+
+static ex solve_quadratic_select_branch(const ex& poly, const symbol& z, const symbol& p) {
+    ex a = poly.coeff(z, 2);
+    ex b = poly.coeff(z, 1);
+    ex c = poly.coeff(z, 0);
+    ex disc = expand(pow(b, 2) - 4*a*c);
+
+    ex r1 = expand((-b + sqrt(disc)) / (2*a));
+    ex r2 = expand((-b - sqrt(disc)) / (2*a));
+
+    if (r1.subs(p==0).expand().is_zero()) return r1;
+    if (r2.subs(p==0).expand().is_zero()) return r2;
+    return r1; // fallback simbólico
+}
+
+// Intenta invertir F(var|·) resolviendo F - p = 0 (solo lineal/cuadrática).
+static bool invert_symbolically(const ex& F, const symbol& var, const symbol& p, ex& out_inverse) {
+    // Tomar numerador y denominador de F - p
+    ex num = numer(F - p);
+    // ex den = denom(F - p); // no lo usamos, pero si quisieras verificar dominio está aquí
+
+    if (!is_polynomial(num, var))
+        return false;
+
+    int deg = degree(num, var);      // grado en 'var'
+    ex poly = expand(num);           // trabajar con el polinomio expandido
+
+    if (deg == 1) {
+        out_inverse = solve_linear_symbolic(poly, var);
+        return true;
+    } else if (deg == 2) {
+        out_inverse = solve_quadratic_select_branch(poly, var, p);
+        return true;
+    }
+    return false; // grado > 2 -> no aplicamos este método
+}
 
 int main() {
     
@@ -11,63 +57,71 @@ int main() {
     std::getline(std::cin, input_expression);
 
     try {
-        // Create parser and register variables
+        // Create parser and register variables. INITIALIZATION
         parser reader;
-
-        // Parse the string
         ex parsed_expression = reader(input_expression);
+        symbol t("t"); symbol u("u"); symbol v("v");
 
         symtab table = reader.get_syms();
         symbol x = table.find("x") != table.end() ?
             ex_to<symbol>(table["x"]) :symbol("x");
         symbol y = table.find("y") != table.end() ?
             ex_to<symbol>(table["y"]) :symbol("y");
-        symbol t("t"); symbol u("u"); symbol v("v");
-
-
+        
+        //DEBUG
         std::cout << "Parsed expression: " << parsed_expression << std::endl;
 
-        //Marginal 
-        integral integral1 = integral(x, 0, 2, parsed_expression);
-        integral integral2 = integral(y, 0, 2, parsed_expression);
+        //1.) Marginal distributions from x and y. (f1(x), f2(y))
+        ex marginal_x = integral(x, 0, 2, parsed_expression).eval_integ();
+        ex marginal_y = integral(y, 0, 2, parsed_expression).eval_integ();
 
-        ex marginal_x = integral1.eval_integ();
-        ex marginal_y = integral2.eval_integ();
-
-        std::cout << "Definite integral with respect to x: " << marginal_x << std::endl;
-        std::cout << "Definite integral with respect to y: " << marginal_y << std::endl;
+        //DEBUG
+        std::cout << "Marginal with respect to x: " << marginal_x << std::endl;
+        std::cout << "Marginal with respect to y: " << marginal_y << std::endl;
 
 
-        //Conditional probabilities
-        ex xdadoy = parsed_expression / marginal_x;
-        ex ydadox = parsed_expression / marginal_y;
+        //2.) Conditional probabilities. f(x|y) = f(x) / f1(x). f(y|x) f(x) / f2(y)
+        ex xGivenY = parsed_expression / marginal_x;
+        ex yGivenX = parsed_expression / marginal_y;
 
-        std::cout << "Conditional probability P(x|y): " << xdadoy << std::endl;
-        std::cout << "Conditional probability P(y|x): " << ydadox << std::endl;
+        //DEBUG
+        std::cout << "Conditional probability P(x|y): " << xGivenY << std::endl;
+        std::cout << "Conditional probability P(y|x): " << yGivenX << std::endl;
 
-        //Acumulativa
-        
-        ex xdadoywitht = xdadoy.subs(x == t);
-        ex ydadoxwitht = ydadox.subs(y == t);
+        //3.) Acumulativa
+        //3.1) P(x|y) con t
+        ex xGivenYwitht = xGivenY.subs(x == t);
+        ex yGivenXwitht = yGivenX.subs(y == t);
 
-        integral intAcumulativa_xy = integral(t, 0, x, xdadoywitht);
-        integral intAcumulativa_yx = integral(t, 0, y, ydadoxwitht);
+        //3.2) Evaluate the integral in t,0.
+        ex acumulativa_xy = integral(t, 0, x, xGivenYwitht).eval_integ();
+        ex acumulativa_yx = integral(t, 0, y, yGivenXwitht).eval_integ();
 
-
-        ex acumulativa_xy = intAcumulativa_xy.eval_integ();
-        ex acumulativa_yx = intAcumulativa_yx.eval_integ();
-
+        //DEBUG
         std::cout << "Acumulativa P(x|y): " << acumulativa_xy.simplify_indexed() << std::endl;
         std::cout << "Acumulativa P(y|x): " << acumulativa_yx.simplify_indexed() << std::endl;
 
-        ex ecuacion1 = acumulativa_xy -u == 0;
-        ex ecuacion2 = acumulativa_xy -v == 0;
+        //Inversas Simbólicas. //Expresion almacenada en inversa1 e inversa2
+        ex inversaX, inversaY;
 
-        ex inversa1 = solve(ecuacion1,x);
-        ex inversa2 = solve(ecuacion2,y);
+        bool ok1 = invert_symbolically(acumulativa_xy, x, u, inversaX);
+        bool ok2 = invert_symbolically(acumulativa_yx, y, v, inversaY);
 
-        std::cout << "Inversa P(x|y): " << inversa1 << std::endl;
-        std::cout << "Inversa P(y|x): " << inversa2 << std::endl;
+        if (ok1) {
+            std::cout << "Inversa P(x|y): " << inversaX << std::endl;
+        } else {
+            std::cout << "No se pudo encontrar la inversa P(x|y)." << std::endl;
+        }
+
+        if (ok2) {
+            std::cout << "Inversa P(y|x): " << inversaY << std::endl;
+        } else {
+            std::cout << "No se pudo encontrar la inversa P(y|x)." << std::endl;
+        }
+
+
+        //En inversa1 e inversa2 realizamos el algoritmo.
+
     
 
     } catch (std::exception &e) {
