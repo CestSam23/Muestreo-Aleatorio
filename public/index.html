@@ -13,15 +13,6 @@
     <div id="data-sampling">
         <h2>Bernoulli</h2>
         <p>Simulación de un experimento de Bernoulli.</p>
-        <p>Generamos n números aleatorios x1,x2,..,xn <br>
-            x1 ∈ A1 → E <br>
-            x2 ∈ A2 → F <br>
-            ...         <br>
-            xn ∈ An → F <br>
-            <br>
-            El conjunto {x1,x2,..,xn} se distribuye en forma de Bernulli <br>
-        </p>
-        
         <div id="FormularioData">
             <form id="bernoulli_form" onsubmit="return false;"> 
                 <label for="num_experimentos">Número de Experimentos:</label>
@@ -45,30 +36,6 @@
     <div id="data-sampling">
         <h2>Binomial</h2>
         <p>Simulación de un muestreo Binomial.</p>
-        <p>Generamos k números aleatorios x1,x2,..,xk y repetimos el experimento n número de veces <br>
-            1ra repeticion <br>
-            x1 → E <br>
-            x2 → F <br>
-            ...    <br>
-            xk → F <br>
-            <br>
-            
-            2da repeticion <br>
-            x1 → F <br>
-            x2 → E <br>
-            ...    <br>
-            xk → F <br>
-
-            <br>
-            "n"va repeticion <br>
-            x1 → F <br>
-            x2 → F <br>
-            ...    <br>
-            xk → E <br>
-
-            La función de densidad nos muestra los éxitos en los n experimentos.
-        </p>
-        
         <div id="FormularioData">
             <form id="binomial_form" onsubmit="return false;">
                 <label for="num_experimentos">Número de Experimentos:</label>
@@ -95,12 +62,6 @@
     <div id="data-sampling">
         <h2>Exponencial</h2>
         <p>Simulación de un experimento de función Exponencial.</p>
-        <p>Generamos n números aleatorios u1,u2,..,un. Una muestra aleatoria con parametro λ con distribución exponencial esta dada por: <br>
-            x1 = -log(1-u1)/λ   <br>
-            x2 = -log(1-u2)/λ   <br>
-            ...                 <br>
-            xn = -log(1-un)/λ   <br>
-        </p>
         
         <div id="FormularioData">
             <form id="exponencial_form" onsubmit="return false;">
@@ -124,31 +85,6 @@
     <div id="data-sampling">
         <h2>Mutlinomial Con Probabilidad Fija</h2>
         <p>Simulación de un muestreo Multinomial.</p>
-        <p>Generamos n números aleatorios x1,x2,..,xk y repetimos el experimento k número de veces.<br>
-            La muestra puede tomar valores en θ1, θ2, ..., θn.
-            1ra repeticion <br>
-            x1 → θ1 <br>
-            x2 → θ4 <br>
-            ...    <br>
-            xn → θn <br>
-            <br>
-            
-            2da repeticion <br>
-            x1 → θ1 <br>
-            x2 → θ2 <br>
-            ...    <br>
-            xn → θn <br>
-
-            <br>
-            "n"va repeticion <br>
-            x1 → θ2 <br>
-            x2 → θ2 <br>
-            ...    <br>
-            xk → θn <br>
-
-            El histograma nos muestra la frecuencia de cada θ en los k experimentos.
-            Se pueden observar las gráficas para los k experimentos
-        </p>
         
         <div id="FormularioData">
             <form id="multinomialf_form" onsubmit="return false;">
@@ -175,31 +111,6 @@
     <div id="data-sampling">
         <h2>Mutlinomial Con Probabilidad Arbitraria</h2>
         <p>Simulación de un muestreo Multinomial.</p>
-        <p>Generamos n números aleatorios x1,x2,..,xk y repetimos el experimento k número de veces.<br>
-            La muestra puede tomar valores en θ1, θ2, ..., θn.
-            1ra repeticion <br>
-            x1 → θ1 <br>
-            x2 → θ4 <br>
-            ...    <br>
-            xn → θn <br>
-            <br>
-            
-            2da repeticion <br>
-            x1 → θ1 <br>
-            x2 → θ2 <br>
-            ...    <br>
-            xn → θn <br>
-
-            <br>
-            "n"va repeticion <br>
-            x1 → θ2 <br>
-            x2 → θ2 <br>
-            ...    <br>
-            xk → θn <br>
-
-            El histograma nos muestra la frecuencia de cada θ en los k experimentos. Los θ pueden ser distintos.
-            Se pueden observar las gráficas para los k experimentos
-        </p>
         
         <div id="FormularioData">
             <form id="multinomialv_form" onsubmit="return false;">
@@ -227,15 +138,6 @@
     <div id="data-sampling">
         <h2>Densidad Normal Estandar</h2>
         <p>Simulación de un muestreo de densidad normal estandar.</p>
-        <p>Se generan dos muestras de números aleatorios {u1,u2,...,un} y {v1,v2,...,vn} <br>
-            La muestra aleatoria con distribución normal estandar esta dada por: <br>
-            x1 = sqrt(-2*log(1/u1))*cos(2π*v1) <br>
-            x2 = sqrt(-2*log(1/u2))*cos(2π*v2) <br>
-            ... <br>
-            xn = sqrt(-2*log(1/un))*cos(2π*vn) <br>
-            De esta forma, {x1,x2,...,xn} se obtiene una muestra aleatoria con distribución normal estandar.
-        </p>
-        
         <div id="FormularioData">
             <form id="normale_form" onsubmit="return false;">
                 <label for="num_muestra">Número de Muestras por experimentos:</label>
@@ -254,11 +156,6 @@
     <div id="data-sampling">
         <h2>Densidad Normal con media μ y varianza σ²</h2>
         <p>Simulación de un muestreo de densidad normal con media y varianza especificadas.</p>
-        <p>Dada una muestra generada por densidad normal estandar, la muestra con media μ y varianza σ² se obtiene mediante la transformación:</p>
-        <p>y1 = μ + σ * x1</p>
-        <p>y2 = μ + σ * x2</p>
-        <p>...</p>
-        <p>yn = μ + σ * xn</p>
         <div id="FormularioData">
             <form id="normalmv_form" onsubmit="return false;">
                 <label for="num_muestra">Número de Muestras por experimentos:</label>

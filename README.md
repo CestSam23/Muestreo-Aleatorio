@@ -1,6 +1,6 @@
 # Muestreo-Aleatorio
 
-This project is a web-based simulation tool for random sampling distributions, including Bernoulli, Binomial, Exponential, and Multinomial (with both fixed and variable probabilities). It combines a C++ backend for high-performance sampling, a Node.js server for API endpoints, and a modern frontend for interactive visualization.
+This project is a web-based simulation tool for random sampling distributions, including Ber    noulli, Binomial, Exponential, and Multinomial (with both fixed and variable probabilities). It combines a C++ backend for high-performance sampling, a Node.js server for API endpoints, and a modern frontend for interactive visualization.
 
 ## Features
 - **Bernoulli, Binomial, Exponential, and Multinomial sampling**
