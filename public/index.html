@@ -15,17 +15,14 @@
 
 <body>
     <div class="container">
-        <div class="formsContainer">
+        <div class="formsContainer" onclick="redirecToPageBernoulli()">
             <h2>Muestreo Bernoulli</h2>
-            <div class="imageContainer">
-                <img src="/public/img/coinflip.png" width="50px" height="50px">
-            </div>
-            <div class="description">
-                <p>Simula experimentos con solo dos resultados (Éxito/Fracaso) Como lanzar una moneda.</p>
-            </div>
+            <div class="imageContainer"><img src="/public/img/coinflip.png" width="50px" height="50px"></div>
+            <div class="description"><p>Simula experimentos con solo dos resultados (Éxito/Fracaso) Como lanzar una moneda.</p></div>
+            <script>function redirecToPageBernoulli() { window.location.href = '/public/htmls/bernoulli.html'; }</script>
         </div>
         
-        <div class="formsContainer">
+        <div class="formsContainer" onclick="redirecToPageBinomial()">
             <h2>Muestreo Binomial</h2>
             <div class="imageWrapper">
                 <div class="imageContainer">
@@ -33,24 +30,19 @@
                     <img src="/public/img/coinflip.png" width="50px" height="50px">
                     <img src="/public/img/coinflip.png" width="50px" height="50px">
                 </div>
-              <div class="description">
-                <p>Lanzar varias monedas seguidas y contar sus éxitos</p>
-                </div>
+              <div class="description"><p>Lanzar varias monedas seguidas y contar sus éxitos</p></div>
+              <script>function redirecToPageBinomial() { window.location.href = '/public/htmls/binomial.html'; }</script>
             </div>    
         </div>
 
-        <div class="formsContainer">
+        <div class="formsContainer" onclick="redirectoToPageExponencial()">
             <h2>Muestreo Exponencial</h2>
-            <div class="imageContainer">
-                <img src="/public/img/queue.svg" width="50px" height="50px">
-            </div>
-            <div class="description">
-                <p>¿Cuánto tiempo pasa entre un evento y el siguiente? Como el tiempo entre clientes que llegan a una tienda"</p>
-            </div>
-            
+            <div class="imageContainer"><img src="/public/img/queue.svg" width="50px" height="50px"></div>
+            <div class="description"><p>¿Cuánto tiempo pasa entre un evento y el siguiente? Como el tiempo entre clientes que llegan a una tienda"</p></div>
+            <script>function redirectoToPageExponencial() { window.location.href = '/public/htmls/exponencial.html'; }</script>
         </div>
 
-        <div class="formsContainer">
+        <div class="formsContainer" onclick="redirectoToPageMultinomial()">
             <h2>Muestreo Multinomial</h2>
             <div class="imageWrapper">
                 <div class="imageContainer">
@@ -58,41 +50,42 @@
                     <img src="/public/img/dice.svg" width="50px" height="50px">
                     <img src="/public/img/dice.svg" width="50px" height="50px">
                 </div>
-            </div>
-            <div class="description">
-                <p>Lanzar un dado múltiples veces. Resultados con varias categorías, como lanzar un dado y ver qué número sale cada vez</p>
-            </div>
+            </div>  
+            <div class="description"><p>Lanzar un dado múltiples veces. Resultados con varias categorías, como lanzar un dado y ver qué número sale cada vez</p></div>
+            <script>function redirectoToPageMultinomial() { window.location.href = '/public/htmls/multinomial.html'; }</script>
         </div>
 
-        <div class="formsContainer">
+        <div class="formsContainer" onclick="redirectoToPageMultinomialVariable()">
             <h2>Muestreo Multinomial Variable</h2>
-            <div class="imageContainer">
-                <img src="/public/img/options.svg" width="50px" height="50px" alt="">
-            </div>
-            <div class="description">
-                <p>Cuando hay varias opciones y diferentes probabilidades para cada una, como los sabores favoritos de helado</p>
-            </div>
-            
+            <div class="imageContainer"><img src="/public/img/options.svg" width="50px" height="50px" alt=""></div>
+            <div class="description"><p>Cuando hay varias opciones y diferentes probabilidades para cada una, como los sabores favoritos de helado</p></div>
+            <script>function redirectoToPageMultinomialVariable() { window.location.href = '/public/htmls/multinomialv.html'; }</script>
         </div>
 
-        <div class="formsContainer">
+        <div class="formsContainer" onclick="redirectoToPageNormal()">
             <h2>Densidad Normal</h2>
-            <div class="imageContainer">
-                <img src="/public/img/stature.svg" width="50px" height="50px" alt="">
-            </div>
-            <div class="description">
-                <p></p>
-            </div>
+            <div class="imageContainer"><img src="/public/img/stature.svg" width="50px" height="50px" alt=""></div>
+            <div class="description"><p>Distribución natural donde la mayoría se agrupa en el centro, como la estatura de las personas</p></div>
+            <script>function redirectoToPageNormal() { window.location.href = '/public/htmls/normal.html'; }</script>
         </div>
 
-        <div class="formsContainer">
+        <div class="formsContainer" onclick="redirectoToPageNormalMuSigma()">
             <h2>Densidad Normal con μ y σ²</h2>
-            <img src="/public/img/exam.svg" width="50px" height="50px" alt="">
+            <div class="imageContainer"><img src="/public/img/exam.svg" width="50px" height="50px" alt=""></div>
+
+            <div class="description">
+                <p>Distribución normal donde puedes ajustar el promedio y la variabilidad, como las calificaciones de un examen</p>
+            </div>
+            <script>function redirectoToPageNormalMuSigma() { window.location.href = '/public/htmls/normalv.html'; }</script>
         </div>
 
-        <div class="formsContainer">
+        <div class="formsContainer" onclick="redirectoToPageGibbs()">
             <h2>Muestreo de Gibbs</h2>
-            <img src="/public/img/weather.svg" width="50px" height="50px" alt="">
+            <div class="imageContainer"><img src="/public/img/weather.svg" width="50px" height="50px" alt=""></div>
+            <div class="description">
+                <p>Para analizar sistemas complejos donde unas variables afectan a otras, como predecir el clima basado en múltiples factores</p>
+            </div>
+            <script>function redirectoToPageGibbs() { window.location.href = '/public/htmls/gibbs.html'; }</script>
         </div>
         
     </div>
