@@ -22,6 +22,8 @@ function createCSVDownloadButton({btnId, plotDivId, filename, headers, rows}) {
         URL.revokeObjectURL(url);
     };
 }
+
+console.log("App.js cargado correctamente");
 document.addEventListener('DOMContentLoaded', () => {
     
     /*-----------LÓGICA PARA FORMULARIOS-----------------*/
