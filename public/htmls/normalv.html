@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Muestreo Normal con media y varianza</title>
+</head>
+<body>
+    <div id="data-sampling">
+        <h2>Densidad Normal con media μ y varianza σ²</h2>
+        <p>Simulación de un muestreo de densidad normal con media y varianza especificadas.</p>
+        <div id="FormularioData">
+            <form id="normalmv_form" onsubmit="return false;">
+                <label for="num_muestra">Número de Muestras por experimentos:</label>
+                <input type="number" id="num_muestra" name="num_muestra" min="1" value="10">
+                <label for="media">Media (μ):</label>
+                <input type="number" id="media" name="media" value="0">
+                <label for="varianza">Varianza (σ²):</label>
+                <input type="number" id="varianza" name="varianza" value="1" step="any">
+                <input type="submit" value="Simular">
+                <br>
+            </form>
+        </div>
+
+        <div id="resultados">
+            <h3>Resultados de la Simulación</h3>
+            <div id="normalmv_plot"></div>
+        </div>
+    </div>
+</body>
+</html>

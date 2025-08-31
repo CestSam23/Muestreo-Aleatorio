@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Muestreo Multinomial Variable</title>
+</head>
+<body>
+    <div id="data-sampling">
+        <h2>Mutlinomial Con Probabilidad Arbitraria</h2>
+        <p>Simulación de un muestreo Multinomial.</p>
+        
+        <div id="FormularioData">
+            <form id="multinomialv_form" onsubmit="return false;">
+                <label for="num_experimentos">Número de Experimentos:</label>
+                <input type="number" id="num_experimentos" name="num_experimentos" min="1" value="6">
+                <br>
+                <label for="num_muestra">Número de Muestras por experimentos:</label>
+                <input type="number" id="num_muestra" name="num_muestra" min="1" value="1000">
+                <br>
+                <label for="cant_prob">Cantidad de probabilidades</label>
+                <input type="number" id="cant_prob" name="cant_prob" min="1" step="1" value="6">
+                <br>
+                <label for="probs_dyn">Probabilidades (separadas por coma, deben sumar 1):</label>
+                <input type="text" id="probs_dyn" name="probs_dyn" value="0.2,0.2,0.2,0.2,0.1,0.1"><br>
+                <input type="submit" value="Simular"><br>
+            </form>
+        </div>
+
+        <div id="resultados">
+            <h3>Resultados de la Simulación</h3>
+            <div id="multinomialv_plot"></div>
+        </div>
+    </div>
+</body>
+</html>
