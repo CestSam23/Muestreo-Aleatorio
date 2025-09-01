@@ -80,8 +80,9 @@ async function handleBernoulli(e){
             x: ['Exitos', 'Fracasos'],
             y: [data.success, data.failure],
             type: 'bar',
+            /* En efecto, Angie le sabe al diseño.*/
             marker: {
-                color: ['#2ecc71', '#e74c3c']
+                color: ['#ad9664ff', '#222e4e']
             }
         }];
 
@@ -114,13 +115,21 @@ async function handleBinomial(e){
         const resultados = data.results;
         const charData = [{
             x: resultados,
-            type: 'histogram'
+            type: 'histogram',
+            marker: {
+                color:'#ad9664ff',
+                line:{
+                    color: '#88764fff',
+                    width: 1
+                }
+            }
         }];
 
         const layout = {
             title: "Distribución Binomial",
             xaxis: {title: {text: "Número de éxitos"}},
-            yaxis: {title: {text: "Frecuecnia"}}
+            yaxis: {title: {text: "Frecuecnia"}},
+            bargap: 0.05
 
             
         };
@@ -150,13 +159,21 @@ async function handleExponencial(e){
         const resultados = data.results;
         const charData = [{
             x: resultados,
-            type: 'histogram'
+            type: 'histogram',
+            marker: {
+                color:'#ad9664ff',
+                line:{
+                    color: '#88764fff',
+                    width: 1
+                }
+            }
         }];
 
         const layout = {
             title: "Distribución Exponencial",
             xaxis: {title: {text: "Valor"}},
-            yaxis: {title: {text: "Frecuencia"}}
+            yaxis: {title: {text: "Frecuencia"}},
+            bargap: 0.05
         };
 
         Plotly.newPlot('exponencial_plot', charData,layout);
@@ -168,16 +185,6 @@ async function handleExponencial(e){
             headers: ['Valor'],
             rows: resultados.map(v => [v])
         });
-        // --- JSON Download Button Logic ---
-        let btn = document.getElementById('exponencial_json_btn');
-        if (!btn) {
-            btn = document.createElement('button');
-            btn.id = 'exponencial_json_btn';
-            btn.textContent = 'Descargar JSON';
-            btn.style.marginTop = '10px';
-            const plotDiv = document.getElementById('exponencial_plot');
-            plotDiv.parentNode.insertBefore(btn, plotDiv.nextSibling);
-        }
         btn.onclick = function() {
             const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
             const url = URL.createObjectURL(blob);
@@ -365,7 +372,7 @@ async function handleMultinomialF(e) {
             rows
         });
 
-        // --- JSON Download Button Logic ---
+       /* // --- JSON Download Button Logic ---
         let btn = document.getElementById('multinomialf_json_btn');
         if (!btn) {
             btn = document.createElement('button');
@@ -373,7 +380,7 @@ async function handleMultinomialF(e) {
             btn.textContent = 'Descargar JSON';
             btn.style.marginTop = '10px';
             plotDiv.parentNode.insertBefore(btn, plotDiv.nextSibling);
-        }
+        }*/
         btn.onclick = function() {
             const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
             const url = URL.createObjectURL(blob);
@@ -542,7 +549,7 @@ async function handleMultinomialV(e) {
             rows
         });
 
-        // --- JSON Download Button Logic ---
+       /* // --- JSON Download Button Logic ---
         let btn = document.getElementById('multinomialv_json_btn');
         if (!btn) {
             btn = document.createElement('button');
@@ -550,8 +557,8 @@ async function handleMultinomialV(e) {
             btn.textContent = 'Descargar JSON';
             btn.style.marginTop = '10px';
             plotDiv.parentNode.insertBefore(btn, plotDiv.nextSibling);
-        }
-        btn.onclick = function() {
+        }*/
+       /* btn.onclick = function() {
             const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
             const url = URL.createObjectURL(blob);
             const a = document.createElement('a');
@@ -561,7 +568,7 @@ async function handleMultinomialV(e) {
             a.click();
             document.body.removeChild(a);
             URL.revokeObjectURL(url);
-        };
+        };*/
         
     } catch (error) {
         console.error("Error en formulario de Multinomial V:", error);
@@ -577,12 +584,20 @@ async function handleNormale(e) {
         const resultados = data.results;
         const charData = [{
             x: resultados,
-            type: 'histogram'
+            type: 'histogram',
+            marker: {
+                color:'#ad9664ff',
+                line:{
+                    color: '#88764fff',
+                    width: 1
+                }
+            }
         }];
         const layout = {
             title: "Distribución Normal Estandar",
             xaxis: {title: {text: "Valor"}},
-            yaxis: {title: {text: "Frecuencia"}}
+            yaxis: {title: {text: "Frecuencia"}},
+            bargap: 0.05
         };
         Plotly.newPlot('normale_plot', charData, layout);
         createCSVDownloadButton({
@@ -592,7 +607,7 @@ async function handleNormale(e) {
             headers: ['Valor'],
             rows: resultados.map(v => [v])
         });
-        // --- JSON Download Button Logic ---
+       /* // --- JSON Download Button Logic ---
         let btn = document.getElementById('normale_json_btn');
         if (!btn) {
             btn = document.createElement('button');
@@ -601,7 +616,7 @@ async function handleNormale(e) {
             btn.style.marginTop = '10px';
             const plotDiv = document.getElementById('normale_plot');
             plotDiv.parentNode.insertBefore(btn, plotDiv.nextSibling);
-        }
+        }*/
         btn.onclick = function() {
             const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
             const url = URL.createObjectURL(blob);
@@ -626,12 +641,20 @@ async function handleNormalMV(e) {
         const resultados = data.results;
         const charData = [{
             x: resultados,
-            type: 'histogram'
+            type: 'histogram',
+            marker: {
+                color:'#ad9664ff',
+                line:{
+                    color: '#88764fff',
+                    width: 1
+                }
+            }
         }];
         const layout = {
             title: "Distribución Normal Multivariante",
             xaxis: {title: {text: "Valor"}},
-            yaxis: {title: {text: "Frecuencia"}}
+            yaxis: {title: {text: "Frecuencia"}},
+            bargap: 0.05
         };
         Plotly.newPlot('normalmv_plot', charData, layout);
         createCSVDownloadButton({
@@ -641,7 +664,7 @@ async function handleNormalMV(e) {
             headers: ['Valor'],
             rows: resultados.map(v => [v])
         });
-        // --- JSON Download Button Logic ---
+        /*// --- JSON Download Button Logic ---
         let btn = document.getElementById('normalmv_json_btn');
         if (!btn) {
             btn = document.createElement('button');
@@ -650,7 +673,7 @@ async function handleNormalMV(e) {
             btn.style.marginTop = '10px';
             const plotDiv = document.getElementById('normalmv_plot');
             plotDiv.parentNode.insertBefore(btn, plotDiv.nextSibling);
-        }
+        }*/
         btn.onclick = function() {
             const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
             const url = URL.createObjectURL(blob);

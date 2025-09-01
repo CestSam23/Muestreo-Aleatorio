@@ -6,25 +6,30 @@
     <title>Muestreo Normal con media y varianza</title>
     <script src="https://cdn.plot.ly/plotly-2.24.1.min.js"></script>
     <script src="/public/js/app.js"></script>
+    <link rel="stylesheet" href="/public/css/stylesForms.css">
 </head>
+
+<header>
+    <h1>Muestreo Normal con media y varianza</h1>
+    <p>Distribución normal donde puedes ajustar el promedio y la variabilidad, como las calificaciones de un examen</p>
+</header>
+
 <body>
-    <div id="data-sampling">
-        <h2>Densidad Normal con media μ y varianza σ²</h2>
-        <p>Simulación de un muestreo de densidad normal con media y varianza especificadas.</p>
-        <div id="FormularioData">
+    <div class="container">
+        <div class="FormularioData">
             <form id="normalmv_form" onsubmit="return false;">
                 <label for="num_muestra">Número de Muestras por experimentos:</label>
-                <input type="number" id="num_muestra" name="num_muestra" min="1" value="10">
+                <input type="number" id="num_muestra" name="num_muestra" min="1" value="1000">
                 <label for="media">Media (μ):</label>
                 <input type="number" id="media" name="media" value="0">
                 <label for="varianza">Varianza (σ²):</label>
                 <input type="number" id="varianza" name="varianza" value="1" step="any">
-                <input type="submit" value="Simular">
+                <input type="submit" id="button" value="Simular">
                 <br>
             </form>
         </div>
 
-        <div id="resultados">
+        <div class="resultados">
             <h3>Resultados de la Simulación</h3>
             <div id="normalmv_plot"></div>
         </div>

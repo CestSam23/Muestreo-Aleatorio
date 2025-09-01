@@ -6,7 +6,7 @@
     <title>Muestreo Bernoulli</title>
     <script src="https://cdn.plot.ly/plotly-2.24.1.min.js"></script>
     <script src="/public/js/app.js"></script>
-    <link rel="stylesheet" href="/public/css/sylesForms.css">
+    <link rel="stylesheet" href="/public/css/stylesForms.css">
     
 </head>
 
@@ -26,11 +26,11 @@
                 <label for="prob_exito">Probabilidad de Éxito (θ):</label>
                 <input type="number" id="prob_exito" name="prob_exito" min="0" max="1" step="0.01" value="0.5">
                 <br>
-                <input type="submit" value="Simular">
+                <input type="submit" id="button"value="Simular">
             </form>            
         </div>
 
-        <div id="resultados">
+        <div class="resultados">
             <h3>Resultados de la Simulación</h3>
             <div id="bernoulli_plot"></div>
         </div>

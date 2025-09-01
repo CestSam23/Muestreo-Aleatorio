@@ -6,12 +6,17 @@
     <title>Muestreo de Gibbs</title>
     <script src="https://cdn.plot.ly/plotly-2.24.1.min.js"></script>
     <script src="/public/js/app.js"></script>
+    <link rel="stylesheet" href="/public/css/stylesForms.css">
 </head>
+
+<header>
+    <h1>Muestreo de Gibbs</h1>
+    <p>Para analizar sistemas complejos donde unas variables afectan a otras, como predecir el clima basado en múltiples factores</p>
+</header>
+
 <body>
-    <div id="data-sampling">
-        <h2>Muestreo de Gibbs</h2>
-        <p>Simulación de una muestra generada por el método de Gibbs</p>
-        <div id="FormularioData">
+    <div class="container">
+        <div class="FormularioData">
             <form id="gibbs_form" onsubmit="return false;">
                 <label for="num_muestra">Número de Muestras por experimentos:</label>
                 <input type="number" id="num_muestra" name="num_muestra" min="1" value="10">
@@ -29,12 +34,12 @@
                 <input type="number" id="pointX" name="pointX" value="4" step="1">
                 <label for="pointY">Punto inicial y:</label>
                 <input type="number" id="pointY" name="pointY" value="5" step="1">
-                <input type="submit" value="Simular">
+                <input type="submit" id="button" value="Simular">
                 <br>
             </form>
         </div>
 
-        <div id="resultados">
+        <div class="resultados">
             <h3>Resultados de la Simulación</h3>
             <div id="gibbs_plot"></div>
         </div>

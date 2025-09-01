@@ -6,13 +6,17 @@
     <title>Muestreo Multinomial</title>
     <script src="https://cdn.plot.ly/plotly-2.24.1.min.js"></script>
     <script src="/public/js/app.js"></script>
+    <link rel="stylesheet" href="/public/css/stylesForms.css">
 </head>
+
+<header>
+    <h1>Muestreo Multinomial</h1>
+    <p>Lanzar un dado múltiples veces. Resultados con varias categorías, como lanzar un dado y ver qué número sale cada vez</p>
+</header>
+
 <body>
-    <div id="data-sampling">
-        <h2>Mutlinomial Con Probabilidad Fija</h2>
-        <p>Simulación de un muestreo Multinomial.</p>
-        
-        <div id="FormularioData">
+    <div class="container">    
+        <div class="FormularioData">
             <form id="multinomialf_form" onsubmit="return false;">
                 <label for="num_experimentos">Número de Experimentos:</label>
                 <input type="number" id="num_experimentos" name="num_experimentos" min="1" value="6">
@@ -23,11 +27,11 @@
                 <label for="cant_prob">Cantidad de probabilidades</label>
                 <input type="number" id="cant_prob" name="cant_prob" min="1" step="1" value="6">
                 <br>
-                <input type="submit" value="Simular">
+                <input type="submit" id="button" value="Simular">
             </form>
         </div>
 
-        <div id="resultados">
+        <div class="resultados">
             <h3>Resultados de la Simulación</h3>
             <div id="multinomialf_plot"></div>
         </div>

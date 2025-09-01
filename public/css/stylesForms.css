@@ -1,0 +1,116 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body{
+    background: linear-gradient(135deg, #eae9d7 0%, #e2e2db 100%);
+    color: #333;
+    min-height: 100vh;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+header {
+    text-align: center;
+    color: #39556f;
+    margin-bottom: 40px;
+    padding: 20px;
+    width: 100%;
+    max-width: 1000px;
+}
+
+header h1{
+    font-size: 2.8rem;
+    margin-bottom: 10px;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+header p{
+    font-size: 1.2rem;
+    opacity: 0.9;
+}
+
+.container{
+    display:flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 70px;
+    max-width: 1500px;
+    width: 100%;
+}
+
+.FormularioData{
+    background: white;
+    border-radius: 12px;
+    width: 500px;
+    height:fit-content;
+    min-height: 400px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    text-align: center;
+    justify-content: center;
+    padding: 50px;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    overflow: hidden;
+    position: relative;
+}
+
+form{
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    padding: 20px;
+}
+
+form label{
+    font-size: 1.1rem;
+    color: #39556f;
+    text-align: center;
+}
+
+form input{
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-size: 1rem;
+    transition: border-color 0.3s ease;
+}
+
+form input#button{
+    background-color: #39556f;
+    color: white;
+    border: none;
+    cursor: pointer;
+}
+
+form input#button:hover{
+    background-color: #2e424d;
+}
+
+
+.resultados{
+    background: white;
+    width: fit-content;
+    height: fit-content;
+    min-width: 800px;
+    min-height: 610px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    justify-content: center;
+    padding: 50px;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    overflow: hidden;
+    position: relative;
+}
+

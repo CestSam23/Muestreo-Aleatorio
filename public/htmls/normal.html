@@ -6,21 +6,26 @@
     <title>Muestreo Normal Estandar</title>
     <script src="https://cdn.plot.ly/plotly-2.24.1.min.js"></script>
     <script src="/public/js/app.js"></script>
+    <link rel="stylesheet" href="/public/css/stylesForms.css">
 </head>
+
+<header>
+    <h1>Muestreo Normal</h1>
+    <p>Distribución natural donde la mayoría se agrupa en el centro, como la estatura de las personas</p>
+</header>
+
 <body>
-    <div id="data-sampling">
-        <h2>Densidad Normal Estandar</h2>
-        <p>Simulación de un muestreo de densidad normal estandar.</p>
-        <div id="FormularioData">
+    <div class="container">
+        <div container="FormularioData">
             <form id="normale_form" onsubmit="return false;">
                 <label for="num_muestra">Número de Muestras por experimentos:</label>
                 <input type="number" id="num_muestra" name="num_muestra" min="1" value="10">
-                <input type="submit" value="Simular">
+                <input type="submit" id="button" value="Simular">
                 <br>
             </form>
         </div>
 
-        <div id="resultados">
+        <div class="resultados">
             <h3>Resultados de la Simulación</h3>
             <div id="normale_plot"></div>
         </div>
