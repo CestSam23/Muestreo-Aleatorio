@@ -134,7 +134,7 @@ const requestListener = function (req, res) {
             sequence=readDoubleArray(sequence, n);
 
             res.setHeader('Content-Type', 'application/json');
-            res.end(JSON.stringify({ success: succes.deref(), failure: failure.deref(), sequence }));
+            res.end(JSON.stringify({ success: succes.deref(), failure: failure.deref(), sequence: sequence }));
             console.log("\n");
             return;
         } else if(req.url.startsWith('/api/binomial')){
