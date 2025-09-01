@@ -75,7 +75,7 @@ static bool invert_symbolically(const ex& F, const symbol& var, const symbol& p,
 
 extern "C" {
     void muestreoBernulli(double *success, double *failure, 
-        double theta, int n){
+        double theta, int n, double *secuence ){
         /*Let x be the number of successes. Where x=1 success, x=0 failure 
         theta = probability of success
         n = size of the sample
@@ -84,8 +84,10 @@ extern "C" {
         for(int i=0;i<n;i++){
             if((double)rand()/(RAND_MAX)<theta){
                 (*success)++;
+                secuence[i]=1.0;
             }else{
                 (*failure)++;
+                secuence[i]=0.0;
             }
         }
     }
