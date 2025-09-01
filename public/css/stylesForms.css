@@ -1,11 +1,11 @@
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+* { 
+    margin: 0; 
+    padding: 0; 
+    box-sizing: border-box; 
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
 }
 
-body{
+body {
     background: linear-gradient(135deg, #eae9d7 0%, #e2e2db 100%);
     color: #333;
     min-height: 100vh;
@@ -24,19 +24,19 @@ header {
     max-width: 1000px;
 }
 
-header h1{
+header h1 {
     font-size: 2.8rem;
     margin-bottom: 10px;
     text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
 }
 
-header p{
+header p {
     font-size: 1.2rem;
     opacity: 0.9;
 }
 
-.container{
-    display:flex;
+.container {
+    display: flex;
     flex-wrap: wrap;
     justify-content: center;
     gap: 70px;
@@ -44,39 +44,105 @@ header p{
     width: 100%;
 }
 
-.FormularioData{
+.FormularioData {
     background: white;
     border-radius: 12px;
     width: 500px;
-    height:fit-content;
+    height: fit-content;
     min-height: 400px;
     display: flex;
     flex-direction: row;
     align-items: center;
     text-align: center;
     justify-content: center;
-    padding: 50px;
+    padding: 10px;
     transition: all 0.3s ease;
     cursor: pointer;
     overflow: hidden;
     position: relative;
 }
 
-form{
+.LimitesX {
+    background: white;
+    border-radius: 12px;
+    width: center;
+    height: fit-content;
+    min-height: 70px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    text-align: center;
+    justify-content: center;
+    padding: 10px;
+    gap: 10px;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    overflow: hidden;
+    position: relative;
+}
+
+.LimitesY {
+    background: white;
+    border-radius: 12px;
+    width: center;
+    height: fit-content;
+    min-height: 50px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    text-align: center;
+    justify-content: center;
+    padding: 10px;
+    gap: 10px;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    overflow: hidden;
+    position: relative;
+}
+
+.pi {
+    background: white;
+    border-radius: 12px;
+    width: center;
+    height: fit-content;
+    min-height: 50px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    text-align: center;
+    justify-content: center;
+    padding: 10px;
+    gap: 10px;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    overflow: hidden;
+    position: relative;
+}
+
+.subcolumns input {
+    width: 80px;
+    min-width: 50px;
+    height: fit-content;
+    padding: 5px;
+    font-size: 14px;
+}
+
+form {
     width: 100%;
     display: flex;
     flex-direction: column;
     gap: 20px;
     padding: 20px;
+    margin-top: 25px;
 }
 
-form label{
+form label {
     font-size: 1.1rem;
     color: #39556f;
     text-align: center;
 }
 
-form input{
+form input {
     padding: 10px;
     border: 1px solid #ccc;
     border-radius: 8px;
@@ -84,19 +150,18 @@ form input{
     transition: border-color 0.3s ease;
 }
 
-form input#button{
+form input#button {
     background-color: #39556f;
     color: white;
     border: none;
     cursor: pointer;
 }
 
-form input#button:hover{
+form input#button:hover {
     background-color: #2e424d;
 }
 
-
-.resultados{
+.resultados {
     background: white;
     width: fit-content;
     height: fit-content;
@@ -113,4 +178,3 @@ form input#button:hover{
     overflow: hidden;
     position: relative;
 }
-
