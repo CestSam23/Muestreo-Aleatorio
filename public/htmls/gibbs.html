@@ -22,18 +22,31 @@
                 <input type="number" id="num_muestra" name="num_muestra" min="1" value="10">
                 <label for="funcion">Función de densidad: </label>
                 <input type="text" id="funcion" name="funcion" value="(1/28)*(2*x+3*y+2)">
-                <label for="limitex1">Limite x inferior</label>
-                <input type="number" id="limitex1" name="limitex1" value="0" step="1">
-                <label for="limitex2">Limite x superior</label>
-                <input type="number" id="limitex2" name="limitex2" value="2" step="1">
-                <label for="limitey1">Limite y inferior</label>
-                <input type="number" id="limitey1" name="limitey1" value="0" step="1">
-                <label for="limitey2">Limite y superior</label>
-                <input type="number" id="limitey2" name="limitey2" value="2" step="1">
-                <label for="pointX">Punto inicial x:</label>
-                <input type="number" id="pointX" name="pointX" value="4" step="1">
-                <label for="pointY">Punto inicial y:</label>
-                <input type="number" id="pointY" name="pointY" value="5" step="1">
+                <div class="subcolumns">
+                    <label for="limites">Límites: </label>
+                    <div class="LimitesX">
+                        <label for="limitex1">x inferior</label>
+                        <input type="number" id="limitex1" name="limitex1" value="0" step="1">
+                        <label for="limitex2">x superior</label>
+                        <input type="number" id="limitex2" name="limitex2" value="2" step="1">
+                    </div>
+
+                    <div class="LimitesY">
+                        <label for="limitey1">y inferior</label>
+                        <input type="number" id="limitey1" name="limitey1" value="0" step="1">
+                        <label for="limitey2">y superior</label>
+                        <input type="number" id="limitey2" name="limitey2" value="2" step="1">
+                    </div>
+
+                    <label for="puntoi">Punto inicial</label>
+                    <div class="pi">
+                        <label for="pointX"> x:</label>
+                        <input type="number" id="pointX" name="pointX" value="4" step="1">
+                        <label for="pointY"> y:</label>
+                        <input type="number" id="pointY" name="pointY" value="5" step="1">
+                    </div>
+                    
+                </div>
                 <input type="submit" id="button" value="Simular">
                 <br>
             </form>
