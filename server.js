@@ -132,7 +132,7 @@ const requestListener = function (req, res) {
             console.log(params);
 
             sequence=readDoubleArray(sequence, n);
-
+            console.log("Sequence: " + sequence);
             res.setHeader('Content-Type', 'application/json');
             res.end(JSON.stringify({ success: succes.deref(), failure: failure.deref(), sequence: sequence }));
             console.log("\n");
