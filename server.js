@@ -22,7 +22,7 @@ const double = ref.types.double;
 const doublePtr = ref.refType(double);
 
 const lib = ffi.Library('./libmuestreo.so', {
-    muestreoBernulli: ["void", [doublePtr, doublePtr,"double","int"]],
+    muestreoBernulli: ["void", [doublePtr, doublePtr,"double","int", doublePtr]],
     muestreoBinomial: ["void", ['pointer',"double","int","int"]],
     muestreoExponencial: ["void", ["double","int","pointer"]],
     muestreoMultinomialFixedl: ["void",["int","int","int","pointer"]],
@@ -126,12 +126,15 @@ const requestListener = function (req, res) {
             const n = params.num_experimentos;
             const succes = ref.alloc(double,0);
             const failure = ref.alloc(double,0);
+            let sequence = createDoubleArray(n,0); 
 
-            lib.muestreoBernulli(succes,failure,theta,n);
+            lib.muestreoBernulli(succes,failure,theta,n,sequence);
             console.log(params);
 
+            sequence=readDoubleArray(sequence, n);
+
             res.setHeader('Content-Type', 'application/json');
-            res.end(JSON.stringify({ success: succes.deref(), failure: failure.deref() }));
+            res.end(JSON.stringify({ success: succes.deref(), failure: failure.deref(), sequence: sequence }));
             console.log("\n");
             return;
         } else if(req.url.startsWith('/api/binomial')){
