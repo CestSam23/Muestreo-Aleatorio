@@ -163,6 +163,7 @@ form input#button:hover {
 
 .resultados {
     background: white;
+    border-radius: 12px;
     width: fit-content;
     height: fit-content;
     min-width: 800px;
@@ -177,4 +178,19 @@ form input#button:hover {
     cursor: pointer;
     overflow: hidden;
     position: relative;
+}
+
+
+
+#bernoulli_array_btn {
+    background-color: #39556f;
+    color: white;
+    border: none;
+    cursor: pointer;
+    padding: 16px 16px;
+    border-radius: 12px;
+    margin-top: auto;
+}
+#bernoulli_array_btn:hover {
+    background-color: #2e424d;
 }
