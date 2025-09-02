@@ -22,6 +22,27 @@ function createCSVDownloadButton({btnId, plotDivId, filename, headers, rows}) {
         URL.revokeObjectURL(url);
     };
 }
+/*--------------LÓGICA PARA BOTÓN SECUENCIA BERNOULLI----*/
+let bernoulliResults = null;
+
+document.addEventListener('DOMContentLoaded', () => {
+  const btn = document.getElementById('bernoulli_array_btn');
+  if (!btn) return;
+
+  btn.addEventListener('click', () => {
+    if (!Array.isArray(bernoulliResults)) {
+      alert('Primero ejecuta la simulación.');
+      return;
+    }
+    const CHUNK = 50;
+    const lines = [];
+    for (let i = 0; i < bernoulliResults.length; i += CHUNK) {
+      lines.push(bernoulliResults.slice(i, i + CHUNK).join(', '));
+    }
+    alert(`Secuencia de Resultados (${bernoulliResults.length}):\n\n${lines.join('\n')}`);
+  });
+});
+
 
 console.log("App.js cargado correctamente");
 document.addEventListener('DOMContentLoaded', () => {
@@ -101,6 +122,11 @@ async function handleBernoulli(e){
                 ['Fracasos', data.failure]
             ]
         });
+
+        //Guardar el arreglo y llamar al botón
+        bernoulliResults=data.sequence;
+        const btn=document.getElementById('bernoulli_array_btn');
+        if(btn) btn.disabled = !Array.isArray(bernoulliResults);
 
     } catch (error) {
         console.error("Error en formulario de Bernoulli:", error);
@@ -198,49 +224,6 @@ async function handleExponencial(e){
         };
     } catch (error) {
         console.error("Error en formulario de Exponencial:", error);
-    }
-}
-
-async function handleGibbs(e) {
-    e.preventDefault();
-    try{
-        console.log("Manejando formulario de Gibbs");
-        const data = await makeRequest('gibbs', new FormData(this));
-        const resultadosX = data.resultsX;
-        const resultadosY = data.resultsY;
-
-        // Each value is a sample, so just output as a single column
-        createCSVDownloadButton({
-            btnId: 'gibbs_csv_button',
-            plotDivId: 'gibbs_plot',
-            filename: 'gibbs_data.csv',
-            headers: ['Valor X', 'Valor Y'],
-            rows: resultadosX.map((v, i) => [v, resultadosY[i]])
-        });
-        // --- JSON Download Button Logic ---
-        let btn = document.getElementById('gibbs_json_btn');
-        if (!btn) {
-            btn = document.createElement('button');
-            btn.id = 'gibbs_json_btn';
-            btn.textContent = 'Descargar JSON';
-            btn.style.marginTop = '10px';
-            const plotDiv = document.getElementById('gibbs_plot');
-            plotDiv.parentNode.insertBefore(btn, plotDiv.nextSibling);
-        }
-        btn.onclick = function() {
-            const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = 'exponencial_data.json';
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
-            URL.revokeObjectURL(url);
-        };
-        
-    } catch(error){
-        console.error("Error en formulario de Gibbs:", error);
     }
 }
 
@@ -687,5 +670,39 @@ async function handleNormalMV(e) {
         };
     } catch (error) {
         console.error("Error en formulario de Normal Multivariante:", error);
+    }
+}
+
+async function handleGibbs(e) {
+    e.preventDefault();
+    try{
+        console.log("Manejando formulario de Gibbs");
+        const data = await makeRequest('gibbs', new FormData(this));
+        const resultadosX = data.resultsX;
+        const resultadosY = data.resultsY;
+
+        // Each value is a sample, so just output as a single column
+        createCSVDownloadButton({
+            btnId: 'gibbs_csv_button',
+            plotDivId: 'gibbs_plot',
+            filename: 'gibbs_data.csv',
+            headers: ['Valor X', 'Valor Y'],
+            rows: resultadosX.map((v, i) => [v, resultadosY[i]])
+        });
+
+        btn.onclick = function() {
+            const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'exponencial_data.json';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        };
+        
+    } catch(error){
+        console.error("Error en formulario de Gibbs:", error);
     }
 }
