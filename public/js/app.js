@@ -124,7 +124,7 @@ async function handleBernoulli(e){
         });
 
         //Guardar el arreglo y llamar al botón
-        bernoulliResults=data.results;
+        bernoulliResults=data.sequence;
         const btn=document.getElementById('bernoulli_array_btn');
         if(btn) btn.disabled = !Array.isArray(bernoulliResults);
 
