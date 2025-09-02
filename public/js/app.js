@@ -22,6 +22,27 @@ function createCSVDownloadButton({btnId, plotDivId, filename, headers, rows}) {
         URL.revokeObjectURL(url);
     };
 }
+/*--------------LÓGICA PARA BOTÓN SECUENCIA BERNOULLI----*/
+let bernoulliResults = null;
+
+document.addEventListener('DOMContentLoaded', () => {
+  const btn = document.getElementById('bernoulli_array_btn');
+  if (!btn) return;
+
+  btn.addEventListener('click', () => {
+    if (!Array.isArray(bernoulliResults)) {
+      alert('Primero ejecuta la simulación.');
+      return;
+    }
+    const CHUNK = 50;
+    const lines = [];
+    for (let i = 0; i < bernoulliResults.length; i += CHUNK) {
+      lines.push(bernoulliResults.slice(i, i + CHUNK).join(', '));
+    }
+    alert(`Secuencia de Resultados (${bernoulliResults.length}):\n\n${lines.join('\n')}`);
+  });
+});
+
 
 console.log("App.js cargado correctamente");
 document.addEventListener('DOMContentLoaded', () => {
@@ -101,6 +122,11 @@ async function handleBernoulli(e){
                 ['Fracasos', data.failure]
             ]
         });
+
+        //Guardar el arreglo y llamar al botón
+        bernoulliResults=data.sequence;
+        const btn=document.getElementById('bernoulli_array_btn');
+        if(btn) btn.disabled = !Array.isArray(bernoulliResults);
 
     } catch (error) {
         console.error("Error en formulario de Bernoulli:", error);
