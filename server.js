@@ -268,7 +268,7 @@ const requestListener = function (req, res) {
             const resultadosY = readDoubleArray(resultsY,n);
 
             res.setHeader('Content-Type', 'application/json');
-            res.end(JSON.stringify({ resultsX: resultadosX, resultsY: resultadosY }));
+            res.end(JSON.stringify({ resultsX: resultadosX, resultsY: resultadosY, limits: { xMin: limitex1, xMax: limitex2, yMin: limitey1, yMax: limitey2 }, bins: { x: 12, y: 12 } }));
             return;
         }else{
             res.writeHead(404);

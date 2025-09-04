@@ -100,15 +100,47 @@ async function handleBernoulli(e){
         const charData = [{
             x: ['Exitos', 'Fracasos'],
             y: [data.success, data.failure],
+            text: [data.success, data.failure], 
+            textposition: 'auto',
             type: 'bar',
+            textfont: {
+                size: 30,   // tamaño de los textos sobre las barras
+                color: 'white'
+            },
             /* En efecto, Angie le sabe al diseño.*/
             marker: {
-                color: ['#ad9664ff', '#222e4e']
-            }
+                color: ['#ad9664ff', '#222e4e'],
+                line:{
+                    color: '#88764fff',
+                    width: 1.5
+                    }
+                }
         }];
 
         const layout = {
-            title: `Distribución Bernoulli (Éxitos: ${data.success}, Fracasos: ${data.failure})`,
+            title: {
+                text: `Distribución Bernoulli`,
+                font: { size: 22, color: '#222e4e' }
+            },
+            xaxis: {
+                title: {
+                    text: 'Resultado',
+                    font: { size: 20, color: '#222e4e'}
+                },
+                tickfont: { size: 20, color: '#222e4e' }
+            },
+
+            yaxis: {
+                title: {
+                    text: 'Frecuencia',
+                    font: { size: 20, color: '#222e4e' }
+                },
+                tickfont: { size: 20, color: '#222e4e' },
+                gridcolor: '#e0e0e0'
+            },
+            plot_bgcolor: '#fff',
+            paper_bgcolor: '#fff',
+            margin: { t: 80, l: 60, r: 40, b: 60 }
         };
         
         Plotly.newPlot('bernoulli_plot', charData,layout);
@@ -132,36 +164,59 @@ async function handleBernoulli(e){
         console.error("Error en formulario de Bernoulli:", error);
     }
 }
-
 async function handleBinomial(e){
     e.preventDefault();
     try {
         console.log("Manejando formulario de Binomial");
         const data = await makeRequest('binomial', new FormData(this));
         const resultados = data.results;
+
+        // Histograma
         const charData = [{
             x: resultados,
             type: 'histogram',
             marker: {
-                color:'#ad9664ff',
-                line:{
+                color: '#ad9664ff',
+                line: {
                     color: '#88764fff',
-                    width: 1
+                    width: 1.5
                 }
             }
         }];
 
         const layout = {
-            title: "Distribución Binomial",
-            xaxis: {title: {text: "Número de éxitos"}},
-            yaxis: {title: {text: "Frecuecnia"}},
-            bargap: 0.05
-
-            
+            title: {
+                text: "Distribución Binomial",
+                font: { size: 26, color: '#222e4e' },
+                x: 0.5,   // centrar título
+                xanchor: 'center'
+            },
+            xaxis: {
+                title: { text: "Número de éxitos", font: { size: 22, color: '#222e4e' } },
+                tickfont: { size: 18, color: '#222e4e' },
+                gridcolor: 'rgba(200,200,200,0.3)',
+                zeroline: false
+            },
+            yaxis: {
+                title: { text: "Frecuencia", font: { size: 22, color: '#222e4e' } },
+                tickfont: { size: 18, color: '#222e4e' },
+                gridcolor: 'rgba(200,200,200,0.3)',
+                zeroline: false
+            },
+            bargap: 0.05,
+            plot_bgcolor: '#fafafa',
+            paper_bgcolor: '#fafafa',
+            margin: { t: 80, l: 70, r: 50, b: 70 }
         };
 
-        Plotly.newPlot('binomial_plot', charData,layout);
-        // Count frequency of each result
+        const config = {
+            responsive: true,
+            displaylogo: false
+        };
+
+        Plotly.newPlot('binomial_plot', charData, layout, config);
+
+        // --- CSV Export ---
         const freq = {};
         resultados.forEach(val => { freq[val] = (freq[val] || 0) + 1; });
         const rows = Object.keys(freq).sort((a,b)=>a-b).map(k => [k, freq[k]]);
@@ -172,6 +227,7 @@ async function handleBinomial(e){
             headers: ['Número de éxitos', 'Frecuencia'],
             rows
         });
+
     } catch (error) {
         console.error("Error en formulario de Binomial:", error);
     }
@@ -183,6 +239,7 @@ async function handleExponencial(e){
         console.log("Manejando formulario de Exponencial");
         const data = await makeRequest('exponencial', new FormData(this));
         const resultados = data.results;
+
         const charData = [{
             x: resultados,
             type: 'histogram',
@@ -196,14 +253,30 @@ async function handleExponencial(e){
         }];
 
         const layout = {
-            title: "Distribución Exponencial",
-            xaxis: {title: {text: "Valor"}},
-            yaxis: {title: {text: "Frecuencia"}},
+            title: {
+                text: "Distribución Exponencial",
+                font: { size: 24, color: '#222e4e' }
+            },
+            xaxis: {
+                title: {
+                    text: "Valor",
+                    font: { size: 22, color: '#222e4e' }
+                },
+                tickfont: { size: 18, color: '#222e4e' }
+            },
+            yaxis: {
+                title: {
+                    text: "Frecuencia",
+                    font: { size: 22, color: '#222e4e' }
+                },
+                tickfont: { size: 18, color: '#222e4e' }
+            },
             bargap: 0.05
         };
 
-        Plotly.newPlot('exponencial_plot', charData,layout);
-        // Each value is a sample, so just output as a single column
+        Plotly.newPlot('exponencial_plot', charData, layout);
+
+        // Generar CSV con los valores
         createCSVDownloadButton({
             btnId: 'exponencial_csv_btn',
             plotDivId: 'exponencial_plot',
@@ -211,17 +284,22 @@ async function handleExponencial(e){
             headers: ['Valor'],
             rows: resultados.map(v => [v])
         });
-        btn.onclick = function() {
-            const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = 'exponencial_data.json';
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
-            URL.revokeObjectURL(url);
-        };
+
+        // Descargar JSON
+        const btn = document.getElementById('exponencial_json_btn'); 
+        if (btn) {
+            btn.onclick = function() {
+                const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = 'exponencial_data.json';
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+            };
+        }
     } catch (error) {
         console.error("Error en formulario de Exponencial:", error);
     }
@@ -364,7 +442,7 @@ async function handleMultinomialF(e) {
             btn.style.marginTop = '10px';
             plotDiv.parentNode.insertBefore(btn, plotDiv.nextSibling);
         }*/
-        btn.onclick = function() {
+        /*btn.onclick = function() {
             const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
             const url = URL.createObjectURL(blob);
             const a = document.createElement('a');
@@ -374,7 +452,7 @@ async function handleMultinomialF(e) {
             a.click();
             document.body.removeChild(a);
             URL.revokeObjectURL(url);
-        };
+        };*/
         
     } catch (error) {
         console.error("Error en formulario de Multinomial F:", error);
@@ -561,28 +639,47 @@ async function handleMultinomialV(e) {
 
 async function handleNormale(e) {
     e.preventDefault();
-    try{
+    try {
         console.log("Manejando formulario Normal Estandar");
-        const data = await makeRequest('normale',new FormData(this));
+        const data = await makeRequest('normale', new FormData(this));
         const resultados = data.results;
+
         const charData = [{
             x: resultados,
             type: 'histogram',
             marker: {
-                color:'#ad9664ff',
-                line:{
+                color: '#ad9664ff',
+                line: {
                     color: '#88764fff',
                     width: 1
                 }
             }
         }];
+
         const layout = {
-            title: "Distribución Normal Estandar",
-            xaxis: {title: {text: "Valor"}},
-            yaxis: {title: {text: "Frecuencia"}},
+            title: {
+                text: "Distribución Normal Estándar",
+                font: { size: 24, color: '#222e4e' }
+            },
+            xaxis: {
+                title: {
+                    text: "Valor",
+                    font: { size: 22, color: '#222e4e' }
+                },
+                tickfont: { size: 18, color: '#222e4e' }
+            },
+            yaxis: {
+                title: {
+                    text: "Frecuencia",
+                    font: { size: 22, color: '#222e4e' }
+                },
+                tickfont: { size: 18, color: '#222e4e' }
+            },
             bargap: 0.05
         };
+
         Plotly.newPlot('normale_plot', charData, layout);
+
         createCSVDownloadButton({
             btnId: 'normale_csv_btn',
             plotDivId: 'normale_plot',
@@ -590,38 +687,19 @@ async function handleNormale(e) {
             headers: ['Valor'],
             rows: resultados.map(v => [v])
         });
-       /* // --- JSON Download Button Logic ---
-        let btn = document.getElementById('normale_json_btn');
-        if (!btn) {
-            btn = document.createElement('button');
-            btn.id = 'normale_json_btn';
-            btn.textContent = 'Descargar JSON';
-            btn.style.marginTop = '10px';
-            const plotDiv = document.getElementById('normale_plot');
-            plotDiv.parentNode.insertBefore(btn, plotDiv.nextSibling);
-        }*/
-        btn.onclick = function() {
-            const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = 'normale_data.json';
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
-            URL.revokeObjectURL(url);
-        };
     } catch (error) {
         console.error("Error en formulario de Normal Estandar:", error);
     }
 }
 
+
 async function handleNormalMV(e) {
     e.preventDefault();
-    try{
+    try {
         console.log("Manejando formulario Normal Multivariante");
-        const data = await makeRequest('normalmv',new FormData(this));
+        const data = await makeRequest('normalmv', new FormData(this));
         const resultados = data.results;
+
         const charData = [{
             x: resultados,
             type: 'histogram',
@@ -633,13 +711,25 @@ async function handleNormalMV(e) {
                 }
             }
         }];
+
         const layout = {
-            title: "Distribución Normal Multivariante",
-            xaxis: {title: {text: "Valor"}},
-            yaxis: {title: {text: "Frecuencia"}},
+            title: {
+                text: "Distribución Normal Multivariante",
+                font: { size: 24, color: '#222e4e' }
+            },
+            xaxis: {
+                title: { text: "Valor", font: { size: 22, color: '#222e4e' } },
+                tickfont: { size: 18, color: '#222e4e' }
+            },
+            yaxis: {
+                title: { text: "Frecuencia", font: { size: 22, color: '#222e4e' } },
+                tickfont: { size: 18, color: '#222e4e' }
+            },
             bargap: 0.05
         };
+
         Plotly.newPlot('normalmv_plot', charData, layout);
+
         createCSVDownloadButton({
             btnId: 'normalmv_csv_btn',
             plotDivId: 'normalmv_plot',
@@ -647,16 +737,7 @@ async function handleNormalMV(e) {
             headers: ['Valor'],
             rows: resultados.map(v => [v])
         });
-        /*// --- JSON Download Button Logic ---
-        let btn = document.getElementById('normalmv_json_btn');
-        if (!btn) {
-            btn = document.createElement('button');
-            btn.id = 'normalmv_json_btn';
-            btn.textContent = 'Descargar JSON';
-            btn.style.marginTop = '10px';
-            const plotDiv = document.getElementById('normalmv_plot');
-            plotDiv.parentNode.insertBefore(btn, plotDiv.nextSibling);
-        }*/
+
         btn.onclick = function() {
             const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
             const url = URL.createObjectURL(blob);
@@ -668,41 +749,217 @@ async function handleNormalMV(e) {
             document.body.removeChild(a);
             URL.revokeObjectURL(url);
         };
+
     } catch (error) {
         console.error("Error en formulario de Normal Multivariante:", error);
     }
 }
+
 
 async function handleGibbs(e) {
     e.preventDefault();
     try{
         console.log("Manejando formulario de Gibbs");
         const data = await makeRequest('gibbs', new FormData(this));
-        const resultadosX = data.resultsX;
-        const resultadosY = data.resultsY;
 
-        // Each value is a sample, so just output as a single column
+        const resultadosX = Array.isArray(data.resultsX) ? data.resultsX : [];
+        const resultadosY = Array.isArray(data.resultsY) ? data.resultsY : [];
+
+        // ---- Configuración de límites y bins (con fallback) ----
+        const arrMinMax = (arr) => {
+            let min = Infinity, max = -Infinity;
+            for (const v of arr) { if (v < min) min = v; if (v > max) max = v; }
+            return [min, max];
+        };
+
+        const [xDataMin, xDataMax] = arrMinMax(resultadosX);
+        const [yDataMin, yDataMax] = arrMinMax(resultadosY);
+
+        const xMin = data?.limits?.xMin ?? xDataMin;
+        const xMax = data?.limits?.xMax ?? xDataMax;
+        const yMin = data?.limits?.yMin ?? yDataMin;
+        const yMax = data?.limits?.yMax ?? yDataMax;
+
+        const binsX = Number(data?.bins?.x ?? data?.binsX ?? 12);
+        const binsY = Number(data?.bins?.y ?? data?.binsY ?? 12);
+
+        if (!Number.isFinite(xMin) || !Number.isFinite(xMax) || !Number.isFinite(yMin) || !Number.isFinite(yMax)) {
+            throw new Error("Límites inválidos para el histograma 3D.");
+        }
+        if (xMax <= xMin || yMax <= yMin) {
+            throw new Error("Rangos inválidos: xMax > xMin y yMax > yMin.");
+        }
+
+        const dx = (xMax - xMin) / binsX;
+        const dy = (yMax - yMin) / binsY;
+
+        // ---- Histograma 2D (solo puntos dentro del límite) ----
+        const hist = Array.from({ length: binsX }, () => Array(binsY).fill(0));
+        let inRangeCount = 0;
+        for (let i = 0; i < resultadosX.length; i++) {
+            const x = resultadosX[i];
+            const y = resultadosY[i];
+            if (x >= xMin && x <= xMax && y >= yMin && y <= yMax) {
+                // índice de bin (incluir borde superior en el último bin)
+                let ix = Math.floor((x - xMin) / dx);
+                let iy = Math.floor((y - yMin) / dy);
+                if (ix === binsX) ix = binsX - 1;
+                if (iy === binsY) iy = binsY - 1;
+                if (ix >= 0 && ix < binsX && iy >= 0 && iy < binsY) {
+                    hist[ix][iy] += 1;
+                    inRangeCount++;
+                }
+            }
+        }
+
+        // CSV (pares en rango)
         createCSVDownloadButton({
             btnId: 'gibbs_csv_button',
             plotDivId: 'gibbs_plot',
             filename: 'gibbs_data.csv',
             headers: ['Valor X', 'Valor Y'],
-            rows: resultadosX.map((v, i) => [v, resultadosY[i]])
+            rows: resultadosX
+                .map((vx, i) => [vx, resultadosY[i]])
+                .filter(([x,y]) => x >= xMin && x <= xMax && y >= yMin && y <= yMax)
         });
 
-        btn.onclick = function() {
-            const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = 'exponencial_data.json';
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
-            URL.revokeObjectURL(url);
+        if (inRangeCount === 0) {
+            Plotly.newPlot('gibbs_plot', [], {
+                title: { text: 'Histograma 3D (Gibbs)', font: { size: 24 } },
+                annotations: [{
+                    text: 'No hay puntos dentro del límite especificado.',
+                    x: 0.5, y: 0.5, xref: 'paper', yref: 'paper', showarrow: false, font: { size: 18 }
+                }]
+            });
+            return;
+        }
+
+        // ---- Construcción de cubos en un solo mesh3d ----
+        const X = [], Y = [], Z = [], I = [], J = [], K = [], intensity = [], hovertext = [];
+        const baseI = [0,0,0,7,4,5,1,2,3,6,6,6];
+        const baseJ = [1,2,3,4,5,6,7,3,0,5,4,7];
+        const baseK = [2,3,1,0,6,1,2,7,4,2,7,5];
+
+        let vCount = 0; // contador de vértices
+        let maxFreq = 0;
+        for (let ix = 0; ix < binsX; ix++) {
+            for (let iy = 0; iy < binsY; iy++) {
+                if (hist[ix][iy] > maxFreq) maxFreq = hist[ix][iy];
+            }
+        }
+
+        for (let ix = 0; ix < binsX; ix++) {
+            for (let iy = 0; iy < binsY; iy++) {
+                const freq = hist[ix][iy];
+                if (freq <= 0) continue;
+
+                const x0 = xMin + ix * dx;
+                const y0 = yMin + iy * dy;
+                const z0 = 0;
+                const h  = freq; // altura = frecuencia
+
+                // 8 vértices del cubo
+                const vx = [x0, x0+dx, x0+dx, x0,   x0,    x0+dx, x0+dx, x0   ];
+                const vy = [y0, y0,    y0+dy, y0+dy, y0,   y0,    y0+dy, y0+dy];
+                const vz = [z0, z0,    z0,    z0,    z0+h, z0+h,  z0+h,  z0+h ];
+
+                X.push(...vx); Y.push(...vy); Z.push(...vz);
+
+                // indices de triángulos (12) con offset
+                for (let t = 0; t < baseI.length; t++) {
+                    I.push(vCount + baseI[t]);
+                    J.push(vCount + baseJ[t]);
+                    K.push(vCount + baseK[t]);
+                }
+
+                // intensidad por vértice (para colorscale)
+                // usamos la frecuencia directa (Plotly escala automáticamente)
+                for (let k = 0; k < 8; k++) intensity.push(freq);
+
+                // hover text (mismo para los 8 vértices)
+                const ht = `X: [${x0.toFixed(3)}, ${(x0+dx).toFixed(3)})` +
+                           `<br>Y: [${y0.toFixed(3)}, ${(y0+dy).toFixed(3)})` +
+                           `<br>Frecuencia: ${freq}`;
+                for (let k = 0; k < 8; k++) hovertext.push(ht);
+
+                vCount += 8;
+            }
+        }
+
+        const trace = {
+            type: 'mesh3d',
+            x: X, y: Y, z: Z,
+            i: I, j: J, k: K,
+            intensity: intensity,
+            colorscale: 'YlGnBu',
+            showscale: true,
+            colorbar: {
+                title: { text: 'Frecuencia', side: 'right', font: { size: 14 } }
+            },
+            flatshading: true,
+            lighting: { ambient: 0.5, diffuse: 0.8, specular: 0.2, roughness: 0.9 },
+            hoverinfo: 'text',
+            text: hovertext,
+            opacity: 0.95
         };
-        
+
+        const layout = {
+            title: { text: 'Histograma 3D (Gibbs)', font: { size: 24, color: '#222e4e' } },
+            scene: {
+                xaxis: {
+                    title: { text: 'X', font: { size: 22, color: '#222e4e' } },
+                    tickfont: { size: 14, color: '#222e4e' },
+                    backgroundcolor: '#f8f9fb',
+                    gridcolor: '#e8ecf3',
+                    zerolinecolor: '#ccd6e0'
+                },
+                yaxis: {
+                    title: { text: 'Y', font: { size: 22, color: '#222e4e' } },
+                    tickfont: { size: 14, color: '#222e4e' },
+                    backgroundcolor: '#f8f9fb',
+                    gridcolor: '#e8ecf3',
+                    zerolinecolor: '#ccd6e0'
+                },
+                zaxis: {
+                    title: { text: 'Frecuencia', font: { size: 22, color: '#222e4e' } },
+                    tickfont: { size: 14, color: '#222e4e' },
+                    gridcolor: '#e8ecf3',
+                    zerolinecolor: '#ccd6e0'
+                },
+                camera: { eye: { x: 1.6, y: 1.6, z: 0.9 } }, // vista agradable
+                aspectmode: 'cube'
+            },
+            paper_bgcolor: '#ffffff',
+            margin: { l: 0, r: 0, b: 10, t: 50 }
+        };
+
+        Plotly.newPlot('gibbs_plot', [trace], layout, {responsive: true});
+
+        // (Opcional) botón JSON si lo tienes en tu HTML con id 'gibbs_json_btn'
+        const btn = document.getElementById('gibbs_json_btn');
+        if (btn) {
+            btn.onclick = function() {
+                const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = 'gibbs_data.json';
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+            };
+        }
+
     } catch(error){
         console.error("Error en formulario de Gibbs:", error);
+        Plotly.purge('gibbs_plot');
+        Plotly.newPlot('gibbs_plot', [], {
+            title: { text: 'Histograma 3D (Gibbs)', font: { size: 24 } },
+            annotations: [{
+                text: 'Ocurrió un error generando la gráfica.',
+                x: 0.5, y: 0.5, xref: 'paper', yref: 'paper', showarrow: false, font: { size: 16 }
+            }]
+        });
     }
 }
