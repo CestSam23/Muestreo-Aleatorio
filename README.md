@@ -1,11 +1,12 @@
 # Muestreo-Aleatorio
 
-This project is a web-based simulation tool for random sampling distributions, including Ber    noulli, Binomial, Exponential, and Multinomial (with both fixed and variable probabilities). It combines a C++ backend for high-performance sampling, a Node.js server for API endpoints, and a modern frontend for interactive visualization.
+This project is a web-based simulation tool for random sampling distributions, including Bernoulli, Binomial, Exponential, and Multinomial (with both fixed and variable probabilities). It combines a C++ backend for high-performance sampling, a Node.js server for API endpoints, and a modern frontend for interactive visualization.
 
 ## Features
-- **Bernoulli, Binomial, Exponential, and Multinomial sampling**
+- **Bernoulli, Binomial, Exponential, Multinomial, and Normal sampling**
 - Interactive web interface with forms for each distribution
 - Dynamic plots using Plotly.js (bar, histogram, and ribbon plots)
+- **Download results as CSV:** After each simulation, a "Descargar CSV" button appears to let you download the generated data.
 - Fast C++ backend for simulation logic (via FFI)
 - Node.js server for API and static file serving
 
@@ -18,7 +19,7 @@ muestreo/
 ├── public/
 │   ├── index.html           # Main web page
 │   └── js/
-│       └── app.js           # Frontend logic (fetch, plotting)
+│       └── app.js           # Frontend logic (fetch, plotting, CSV download)
 └── ...
 ```
 
@@ -51,6 +52,7 @@ Visit [http://localhost:8080](http://localhost:8080) in your browser.
 - Fill out the forms for the desired distribution.
 - Click "Simular" to run the simulation.
 - Results and plots will appear dynamically without reloading the page.
+- **Download CSV:** After each plot is shown, click the "Descargar CSV" button to download the simulation data as a CSV file.
 
 ## API Endpoints
 - `/api/bernoulli`
@@ -58,6 +60,9 @@ Visit [http://localhost:8080](http://localhost:8080) in your browser.
 - `/api/exponencial`
 - `/api/multinomialf`
 - `/api/multinomialv`
+- `/api/normale`
+- `/api/normalmv`
+- `/api/gibbs`
 
 All endpoints expect GET requests with appropriate query parameters.
 
