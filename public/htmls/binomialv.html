@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Binomial Multivariable</title>
+    <script src="https://cdn.plot.ly/plotly-2.24.1.min.js"></script>
+    <script src="/public/js/app.js"></script>
+    <link rel="stylesheet" href="/public/css/stylesForms.css">
+</head>
+
+<header>
+    <h1>Binomial Multivariable</h1>
+    <p>Experimentos binomiales con múltiples variables y diferentes probabilidades de éxito</p>
+</header>
+
+<body>
+    <div class="container">
+        <div class="FormularioData">
+            <form id="binomialv_form" onsubmit="return false;">
+                <label for="num_experimentos">Número de Experimentos:</label>
+                <input type="number" id="num_experimentos" name="num_experimentos" min="1" value="100">
+                <br>
+                <label for="num_muestra">Número de Muestras por experimentos:</label>
+                <input type="number" id="num_muestra" name="num_muestra" min="1" value="10">
+                <br>
+                <label for="num_variables">Número de Variables:</label>
+                <input type="number" id="num_variables" name="num_variables" min="1" value="2">
+                <br>
+                <label for="probs_exito">Probabilidades de Éxito (separadas por comas):</label>
+                <input type="text" id="probs_exito" name="probs_exito" value="0.5,0.3">
+                <br>
+                <input type="submit" id="button" value="Simular">
+            </form>
+        </div>
+
+        <div class="resultados">
+            <h3>Resultados de la Simulación</h3>
+            <div id="binomialv_plot"></div>
+        </div>
+    </div>
+</body>
+</html>
