@@ -56,7 +56,8 @@ document.addEventListener('DOMContentLoaded', () => {
         'multinomialv_form' : handleMultinomialV,
         'normale_form' : handleNormale,
         'normalmv_form' : handleNormalMV,
-        'gibbs_form' : handleGibbs
+        'gibbs_form' : handleGibbs,
+        'normalbiv_form' : handleNormalBiv
     };
 
     //Asignar event listeners a cada formulario
@@ -692,6 +693,62 @@ async function handleNormale(e) {
     }
 }
 
+async function handleNormalBiv(e) {
+    e.preventDefault();
+    try {
+        console.log("Manejando formulario Normal Bivariada");
+        const data = await makeRequest('normalbiv', new FormData(this));
+        const resultadosX = data.resultsX;
+        const resultadosY = data.resultsY;
+
+        const charData = [{
+            x: resultadosX,
+            y: resultadosY,
+            mode: 'markers',
+            type: 'scatter',
+            marker: {
+                size: 5,
+                color: '#ad9664ff',
+                line: {
+                    color: '#88764fff',
+                    width: 1
+                },
+                opacity: 0.7
+            }
+        }];
+
+        const layout = {
+            title: {
+                text: "Distribución Normal Bivariada",
+                font: { size: 24, color: '#222e4e' }
+            },
+            xaxis: {
+                title: { text: "X", font: { size: 22, color: '#222e4e' } },
+                tickfont: { size: 18, color: '#222e4e' }
+            },
+            yaxis: {
+                title: { text: "Y", font: { size: 22, color: '#222e4e' } },
+                tickfont: { size: 18, color: '#222e4e' }
+            },
+            plot_bgcolor: '#fafafa',
+            paper_bgcolor: '#fafafa',
+            margin: { t: 80, l: 70, r: 50, b: 70 }
+        };
+
+        Plotly.newPlot('normalbiv_plot', charData, layout);
+
+        createCSVDownloadButton({
+            btnId: 'normalbiv_csv_btn',
+            plotDivId: 'normalbiv_plot',
+            filename: 'normalbiv_data.csv',
+            headers: ['X', 'Y'],
+            rows: resultadosX.map((x, i) => [x, resultadosY[i]])
+        });
+
+    } catch (error) {
+        console.error("Error en formulario de Normal Bivariada:", error);
+    }
+}
 
 async function handleNormalMV(e) {
     e.preventDefault();

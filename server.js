@@ -30,7 +30,8 @@ const lib = ffi.Library('./libmuestreo.so', {
     muestreoNormalEstandar: ["void", ["int","pointer"]],
     muestreoNormal: ["void", ["int", "double","double","pointer"]],
     muestreoGibbs: ["void", ["int", "string","double","double","double",
-                            "double","double","double","pointer","pointer"]]
+                            "double","double","double","pointer","pointer"]],
+    muestreoBivariable: ["void", ["double", "double", "double", "double", "double", "double", "double","int","pointer", "pointer"]]
 });
 
 //Para crear arrays de double
@@ -270,12 +271,35 @@ const requestListener = function (req, res) {
             res.setHeader('Content-Type', 'application/json');
             res.end(JSON.stringify({ resultsX: resultadosX, resultsY: resultadosY, limits: { xMin: limitex1, xMax: limitex2, yMin: limitey1, yMax: limitey2 }, bins: { x: 12, y: 12 } }));
             return;
+        }else if(req.url.startsWith('/api/normalbiv')){
+            const params = parseQueryParams(req.url);
+            const n = params.num_muestra;
+            const mux = params.mux;
+            const muy = params.muy;
+            const sigmaX = params.sigmaX;
+            const sigmaY = params.sigmaY;
+            const correlacion = params.correlacion;
+            const resultsX = createDoubleArray(n);
+            const resultsY = createDoubleArray(n);
+            console.log(params);
+            
+            lib.muestreoBivariable(correlacion,sigmaX,sigmaY,mux,muy,1,3,n,resultsX,resultsY);
+
+            const resultadosX = readDoubleArray(resultsX,n);
+            const resultadosY = readDoubleArray(resultsY,n);
+
+            console.log("Resultados X:", resultadosX);
+            console.log("Resultados Y:", resultadosY);
+
+            res.setHeader('Content-Type', 'application/json');
+            res.end(JSON.stringify({ resultsX: resultadosX, resultsY: resultadosY }));
+            return;
+
         }else{
             res.writeHead(404);
             res.end(JSON.stringify({ error: 'Endpoint API no encontrado' }));
             return;
         }
-
 
     }
 
