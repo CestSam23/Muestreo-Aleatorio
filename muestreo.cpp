@@ -198,45 +198,33 @@ extern "C" {
         Let resultsX be a vector of size n, where resultsX[i] is the i-th sample for X.
         Let resultsY be a vector of size n, where resultsY[i] is the i-th sample for Y.
         */
+        // Generate standard normal samples
         double x[n];
         double y[n];
-
         muestreoNormalEstandar(n, x);
         muestreoNormalEstandar(n, y);
-
-        for(int i=0;i<n;i++){
-            std::cout << "(" << x[i] << "," << y[i] << ")" << std::endl;   
+        
+        // Initialize first point
+        resultsX[0] = pointX;
+        resultsY[0] = pointY;
+        
+        // Gibbs sampling loop
+        for(int i = 1; i < n; i++) {
+            // Sample X given previous Y
+            double condMeanX = muX + coeficienteCorrelacion * (sigmaX/sigmaY) * (resultsY[i-1] - muY);
+            double condStdX = sigmaX * sqrt(1 - coeficienteCorrelacion * coeficienteCorrelacion);
+            resultsX[i] = condMeanX + condStdX * x[i];
+            
+            // Sample Y given current X
+            double condMeanY = muY + coeficienteCorrelacion * (sigmaY/sigmaX) * (resultsX[i] - muX);
+            double condStdY = sigmaY * sqrt(1 - coeficienteCorrelacion * coeficienteCorrelacion);
+            resultsY[i] = condMeanY + condStdY * y[i];
         }
         
-        /*resultsX[0] = (muX * sqrt(1 - std::pow(coeficienteCorrelacion, 2))) * x[0] -
-                        (sigmaX + (((coeficienteCorrelacion * muX) / muY) * (pointY - sigmaX)));
-
-        resultsY[0] = (muY * sqrt(1 - std::pow(coeficienteCorrelacion, 2))) * y[0] -
-                        (sigmaY + (((coeficienteCorrelacion * muY) / muX) * (pointX - sigmaY)));*/
-
-        double mediaX = (sigmaX * sqrt(1 - std::pow(coeficienteCorrelacion, 2)));
-        double varianzaX = (muX + (((coeficienteCorrelacion * sigmaX) / sigmaY) * (pointY - muX)));
-        resultsX[0] = mediaX * x[0] - varianzaX;
-
-        double mediaY = (sigmaY * sqrt(1 - std::pow(coeficienteCorrelacion, 2)));
-        double varianzaY = (muY + (((coeficienteCorrelacion * sigmaY) / sigmaX) * (pointX - muY)));
-        resultsY[0] = mediaY * y[0] - varianzaY;
-
+        // Debug output
         std::cout << "Punto inicial: (" << resultsX[0] << "," << resultsY[0] << ")" << std::endl;
-        std::cout << "MediaX: " << mediaX << " VarianzaX: " << varianzaX << std::endl;
-        std::cout << "MediaY: " << mediaY << " VarianzaY: " << varianzaY << std::endl;
-
-
-        for(int i = 1; i < n; i++){
-            resultsX[i] = (sigmaX * sqrt(1 - std::pow(coeficienteCorrelacion, 2))) * x[i-1] -
-                            (muX + (((coeficienteCorrelacion * sigmaX) / sigmaY) * (pointY - muX)));
-            resultsY[i] = (sigmaY * sqrt(1 - std::pow(coeficienteCorrelacion, 2))) * y[i-1] -
-                            (muY + (((coeficienteCorrelacion * sigmaY) / sigmaX) * (pointX - muY)));
-        }
-        
-        //debug
-        for(int i = 0; i < n; i++){
-            std::cout << "(" << resultsX[i] << "," << resultsY[i] << ")" << std::endl;
+        for(int i = 0; i < n; i++) {
+            std::cout << "Muestra " << i << ": (" << resultsX[i] << "," << resultsY[i] << ")" << std::endl;
         }
     }
 

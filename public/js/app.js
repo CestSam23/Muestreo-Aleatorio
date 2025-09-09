@@ -698,57 +698,170 @@ async function handleNormalBiv(e) {
     try {
         console.log("Manejando formulario Normal Bivariada");
         const data = await makeRequest('normalbiv', new FormData(this));
-        const resultadosX = data.resultsX;
-        const resultadosY = data.resultsY;
 
-        const charData = [{
-            x: resultadosX,
-            y: resultadosY,
-            mode: 'markers',
-            type: 'scatter',
-            marker: {
-                size: 5,
-                color: '#ad9664ff',
-                line: {
-                    color: '#88764fff',
-                    width: 1
-                },
-                opacity: 0.7
-            }
-        }];
+        const resultadosX = Array.isArray(data.resultsX) ? data.resultsX : [];
+        const resultadosY = Array.isArray(data.resultsY) ? data.resultsY : [];
 
-        const layout = {
-            title: {
-                text: "Distribución Normal Bivariada",
-                font: { size: 24, color: '#222e4e' }
-            },
-            xaxis: {
-                title: { text: "X", font: { size: 22, color: '#222e4e' } },
-                tickfont: { size: 18, color: '#222e4e' }
-            },
-            yaxis: {
-                title: { text: "Y", font: { size: 22, color: '#222e4e' } },
-                tickfont: { size: 18, color: '#222e4e' }
-            },
-            plot_bgcolor: '#fafafa',
-            paper_bgcolor: '#fafafa',
-            margin: { t: 80, l: 70, r: 50, b: 70 }
+        // ---- Configuración de límites y bins (igual que Gibbs) ----
+        const arrMinMax = (arr) => {
+            let min = Infinity, max = -Infinity;
+            for (const v of arr) { if (v < min) min = v; if (v > max) max = v; }
+            return [min, max];
         };
 
-        Plotly.newPlot('normalbiv_plot', charData, layout);
+        const [xDataMin, xDataMax] = arrMinMax(resultadosX);
+        const [yDataMin, yDataMax] = arrMinMax(resultadosY);
 
+        const xMin = data?.limits?.xMin ?? xDataMin;
+        const xMax = data?.limits?.xMax ?? xDataMax;
+        const yMin = data?.limits?.yMin ?? yDataMin;
+        const yMax = data?.limits?.yMax ?? yDataMax;
+
+        const binsX = Number(data?.bins?.x ?? data?.binsX ?? 30);
+        const binsY = Number(data?.bins?.y ?? data?.binsY ?? 30);
+
+        if (!Number.isFinite(xMin) || !Number.isFinite(xMax) || !Number.isFinite(yMin) || !Number.isFinite(yMax)) {
+            throw new Error("Límites inválidos para el histograma 3D.");
+        }
+        if (xMax <= xMin || yMax <= yMin) {
+            throw new Error("Rangos inválidos: xMax > xMin y yMax > yMin.");
+        }
+
+        const dx = (xMax - xMin) / binsX;
+        const dy = (yMax - yMin) / binsY;
+
+        // ---- Histograma 2D ----
+        const hist = Array.from({ length: binsX }, () => Array(binsY).fill(0));
+        let inRangeCount = 0;
+        for (let i = 0; i < resultadosX.length; i++) {
+            const x = resultadosX[i];
+            const y = resultadosY[i];
+            if (x >= xMin && x <= xMax && y >= yMin && y <= yMax) {
+                let ix = Math.floor((x - xMin) / dx);
+                let iy = Math.floor((y - yMin) / dy);
+                if (ix === binsX) ix = binsX - 1;
+                if (iy === binsY) iy = binsY - 1;
+                if (ix >= 0 && ix < binsX && iy >= 0 && iy < binsY) {
+                    hist[ix][iy] += 1;
+                    inRangeCount++;
+                }
+            }
+        }
+
+        // CSV (pares en rango)
         createCSVDownloadButton({
             btnId: 'normalbiv_csv_btn',
             plotDivId: 'normalbiv_plot',
             filename: 'normalbiv_data.csv',
             headers: ['X', 'Y'],
-            rows: resultadosX.map((x, i) => [x, resultadosY[i]])
+            rows: resultadosX
+                .map((vx, i) => [vx, resultadosY[i]])
+                .filter(([x,y]) => x >= xMin && x <= xMax && y >= yMin && y <= yMax)
         });
+
+        if (inRangeCount === 0) {
+            Plotly.newPlot('normalbiv_plot', [], {
+                title: { text: 'Histograma 3D (Normal Bivariada)', font: { size: 24 } },
+                annotations: [{
+                    text: 'No hay puntos dentro del límite especificado.',
+                    x: 0.5, y: 0.5, xref: 'paper', yref: 'paper', showarrow: false, font: { size: 18 }
+                }]
+            });
+            return;
+        }
+
+        // ---- Construcción de cubos estilo Gibbs ----
+        const X = [], Y = [], Z = [], I = [], J = [], K = [], intensity = [], hovertext = [];
+        const baseI = [0,0,0,7,4,5,1,2,3,6,6,6];
+        const baseJ = [1,2,3,4,5,6,7,3,0,5,4,7];
+        const baseK = [2,3,1,0,6,1,2,7,4,2,7,5];
+
+        let vCount = 0;
+        for (let ix = 0; ix < binsX; ix++) {
+            for (let iy = 0; iy < binsY; iy++) {
+                const freq = hist[ix][iy];
+                if (freq <= 0) continue;
+
+                const x0 = xMin + ix * dx;
+                const y0 = yMin + iy * dy;
+                const z0 = 0;
+                const h  = freq;
+
+                const vx = [x0, x0+dx, x0+dx, x0,   x0,    x0+dx, x0+dx, x0   ];
+                const vy = [y0, y0,    y0+dy, y0+dy, y0,   y0,    y0+dy, y0+dy];
+                const vz = [z0, z0,    z0,    z0,    z0+h, z0+h,  z0+h,  z0+h ];
+
+                X.push(...vx); Y.push(...vy); Z.push(...vz);
+
+                for (let t = 0; t < baseI.length; t++) {
+                    I.push(vCount + baseI[t]);
+                    J.push(vCount + baseJ[t]);
+                    K.push(vCount + baseK[t]);
+                }
+
+                for (let k = 0; k < 8; k++) intensity.push(freq);
+
+                const ht = `X: [${x0.toFixed(3)}, ${(x0+dx).toFixed(3)})` +
+                           `<br>Y: [${y0.toFixed(3)}, ${(y0+dy).toFixed(3)})` +
+                           `<br>Frecuencia: ${freq}`;
+                for (let k = 0; k < 8; k++) hovertext.push(ht);
+
+                vCount += 8;
+            }
+        }
+
+        const trace = {
+            type: 'mesh3d',
+            x: X, y: Y, z: Z,
+            i: I, j: J, k: K,
+            intensity: intensity,
+            colorscale: 'Viridis',
+            showscale: true,
+            colorbar: {
+                title: { text: 'Frecuencia', side: 'right', font: { size: 14 } }
+            },
+            flatshading: true,
+            hoverinfo: 'text',
+            text: hovertext,
+            opacity: 0.95
+        };
+
+        const layout = {
+            title: { text: 'Histograma 3D (Normal Bivariada)', font: { size: 24, color: '#222e4e' } },
+            scene: {
+                xaxis: {
+                    title: { text: 'X', font: { size: 22, color: '#222e4e' } },
+                    tickfont: { size: 14, color: '#222e4e' }
+                },
+                yaxis: {
+                    title: { text: 'Y', font: { size: 22, color: '#222e4e' } },
+                    tickfont: { size: 14, color: '#222e4e' }
+                },
+                zaxis: {
+                    title: { text: 'Frecuencia', font: { size: 22, color: '#222e4e' } },
+                    tickfont: { size: 14, color: '#222e4e' }
+                },
+                camera: { eye: { x: 1.6, y: 1.6, z: 0.9 } },
+                aspectmode: 'cube'
+            },
+            margin: { l: 0, r: 0, b: 10, t: 50 }
+        };
+
+        Plotly.newPlot('normalbiv_plot', [trace], layout, { responsive: true });
 
     } catch (error) {
         console.error("Error en formulario de Normal Bivariada:", error);
+        Plotly.purge('normalbiv_plot');
+        Plotly.newPlot('normalbiv_plot', [], {
+            title: { text: 'Histograma 3D (Normal Bivariada)', font: { size: 24 } },
+            annotations: [{
+                text: 'Ocurrió un error generando la gráfica.',
+                x: 0.5, y: 0.5, xref: 'paper', yref: 'paper', showarrow: false, font: { size: 16 }
+            }]
+        });
     }
 }
+
 
 async function handleNormalMV(e) {
     e.preventDefault();
