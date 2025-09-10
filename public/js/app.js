@@ -4,8 +4,9 @@ function createCSVDownloadButton({btnId, plotDivId, filename, headers, rows}) {
     if (!btn) {
         btn = document.createElement('button');
         btn.id = btnId;
-        btn.textContent = 'Descargar CSV';
+        btn.textContent = 'CSV';
         btn.style.marginTop = '10px';
+        btn.style.padding = '8px 16px';
         const plotDiv = document.getElementById(plotDivId);
         plotDiv.parentNode.insertBefore(btn, plotDiv.nextSibling);
     }
