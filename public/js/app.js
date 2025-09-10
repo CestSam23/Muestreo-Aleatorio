@@ -910,6 +910,7 @@ async function handleNormalBiv(e) {
         };
 
         Plotly.newPlot('normalbiv_plot', [trace], layout, { responsive: true });
+        intercalatedbtn('btn_2dNB','btn_3dNB',resultadosX, resultadosY, 'normalbiv_plot', trace, layout);
 
     } catch (error) {
         console.error("Error en formulario de Normal Bivariada:", error);
@@ -1058,24 +1059,6 @@ async function handleGibbs(e) {
             }
         }
 
-        /*Graficado de todos los puntos */
-        const scatter2D={
-            type: 'scattergl',
-            mode: 'markers',
-            x:resultadosX,
-            y:resultadosY,
-            marker: {size: 4, opacity: 0.7},
-            name: 'Muestras (X,Y)'
-        }
-
-        const layout2D = {
-            title: { text: 'Histograma completo 2D (muestras sin filtrar)', font: { size: 24, color: '#222e4e' } },
-            xaxis: { title: { text: 'X' } },
-            yaxis: { title: { text: 'Y' } },
-            paper_bgcolor: '#ffffff',
-            margin: { l: 50, r: 10, b: 40, t: 60 }
-        };
-
         const trace = {
             type: 'mesh3d',
             x: X, y: Y, z: Z,
@@ -1125,20 +1108,7 @@ async function handleGibbs(e) {
 
         Plotly.newPlot('gibbs_plot', [trace], layout, {responsive: true});
 
-        /*Botones para alternar */
-        const btn2D = document.getElementById('btn_2d');
-        const btn3D = document.getElementById('btn_3d');
-
-        if (btn2D) {
-            btn2D.onclick = () => {
-                Plotly.newPlot('gibbs_plot', [scatter2D], layout2D, { responsive: true });
-            };
-        }
-        if (btn3D) {
-            btn3D.onclick = () => {
-                Plotly.newPlot('gibbs_plot', [trace], layout, { responsive: true });
-            };
-        }
+        intercalatedbtn('btn_2dG','btn_3dG',resultadosX, resultadosY, 'gibbs_plot', trace, layout);
 
 
     } catch(error){
@@ -1201,3 +1171,40 @@ document.addEventListener('DOMContentLoaded', () => {
   render();                 // render inicial con el valor por defecto
   input.addEventListener('input', render);
 });
+
+async function intercalatedbtn(btn_2d, btn_3d, resX, resY, plot, trace3D, layout3D) {
+    const btn2D = document.getElementById(btn_2d);
+    const btn3D = document.getElementById(btn_3d);
+    if (btn2D) {
+        btn2D.onclick = () => {
+            scatter2dplot(resX, resY, plot);
+        };
+    }
+    if (btn3D) {
+        btn3D.onclick = () => {
+            Plotly.newPlot(plot, [trace3D], layout3D, { responsive: true });
+        };
+    }
+}
+
+function scatter2dplot(resultadosX, resultadosY,plot){
+    /*Graficado de todos los puntos */
+    const scatter2D={
+        type: 'scattergl',
+        mode: 'markers',
+        x:resultadosX,
+        y:resultadosY,
+        marker: {size: 4, opacity: 0.7},
+        name: 'Muestras (X,Y)'
+    }
+
+    const layout2D = {
+        title: { text: 'Histograma completo 2D (muestras sin filtrar)', font: { size: 24, color: '#222e4e' } },
+        xaxis: { title: { text: 'X' } },
+        yaxis: { title: { text: 'Y' } },
+        paper_bgcolor: '#ffffff',
+        margin: { l: 50, r: 10, b: 40, t: 60 }
+    };
+
+    Plotly.newPlot(plot, [scatter2D], layout2D, { responsive: true });
+}

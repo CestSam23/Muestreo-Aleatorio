@@ -188,7 +188,7 @@ form input#button:hover{
   font-size: 1.0 rem;
 }
 
-#bernoulli_array_btn,#btn_2d, #btn_3d {
+#bernoulli_array_btn,#btn_2dG, #btn_3dG,#btn_2dNB, #btn_3dNB {
     background-color: #39556f;
     color: white;
     border: none;
@@ -197,7 +197,7 @@ form input#button:hover{
     border-radius: 12px;
     margin-top: auto;
 }
-#bernoulli_array_btn:hover, #btn_2d:hover, #btn_3d:hover{
+#bernoulli_array_btn:hover, #btn_2dG:hover, #btn_3dG:hover, #btn_2dNB:hover, #btn_3dNB:hover{
     background-color: #2e424d;
 }
 
