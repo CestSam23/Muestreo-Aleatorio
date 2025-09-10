@@ -22,27 +22,6 @@ function createCSVDownloadButton({btnId, plotDivId, filename, headers, rows}) {
         URL.revokeObjectURL(url);
     };
 }
-/*--------------LÓGICA PARA BOTÓN SECUENCIA BERNOULLI----*/
-let bernoulliResults = null;
-
-document.addEventListener('DOMContentLoaded', () => {
-  const btn = document.getElementById('bernoulli_array_btn');
-  if (!btn) return;
-
-  btn.addEventListener('click', () => {
-    if (!Array.isArray(bernoulliResults)) {
-      alert('Primero ejecuta la simulación.');
-      return;
-    }
-    const CHUNK = 50;
-    const lines = [];
-    for (let i = 0; i < bernoulliResults.length; i += CHUNK) {
-      lines.push(bernoulliResults.slice(i, i + CHUNK).join(', '));
-    }
-    alert(`Secuencia de Resultados (${bernoulliResults.length}):\n\n${lines.join('\n')}`);
-  });
-});
-
 
 console.log("App.js cargado correctamente");
 document.addEventListener('DOMContentLoaded', () => {
@@ -90,61 +69,46 @@ async function makeRequest(endpoint, formData) {
     }
 }
 
-
-//---------------------MANEJADOR DE PETICIONES------------------------
 async function handleBernoulli(e){
     e.preventDefault();
     try{
         console.log("Manejando formulario de Bernoulli");
         const data = await makeRequest('bernoulli', new FormData(this));
         
+        //Information for the Plot
         const charData = [{
             x: ['Exitos', 'Fracasos'],
             y: [data.success, data.failure],
             text: [data.success, data.failure], 
             textposition: 'auto',
             type: 'bar',
-            textfont: {
-                size: 30,   // tamaño de los textos sobre las barras
-                color: 'white'
-            },
+            textfont: {size: 30, color: 'white'},
             /* En efecto, Angie le sabe al diseño.*/
-            marker: {
-                color: ['#ad9664ff', '#222e4e'],
-                line:{
-                    color: '#88764fff',
-                    width: 1.5
-                    }
-                }
+            marker: {color: ['#ad9664ff', '#222e4e'], line:{ color: '#88764fff', width: 1.5}}
         }];
-
         const layout = {
-            title: {
-                text: `Distribución Bernoulli`,
-                font: { size: 22, color: '#222e4e' }
-            },
-            xaxis: {
-                title: {
-                    text: 'Resultado',
-                    font: { size: 20, color: '#222e4e'}
-                },
-                tickfont: { size: 20, color: '#222e4e' }
-            },
-
-            yaxis: {
-                title: {
-                    text: 'Frecuencia',
-                    font: { size: 20, color: '#222e4e' }
-                },
-                tickfont: { size: 20, color: '#222e4e' },
-                gridcolor: '#e0e0e0'
-            },
+            title: {text: `Distribución Bernoulli`, font: { size: 22, color: '#222e4e' }},
+            xaxis: {title: {text: 'Resultado', font: { size: 20, color: '#222e4e'}}, tickfont: { size: 20, color: '#222e4e' }},
+            yaxis: {title: {text: 'Frecuencia', font: { size: 20, color: '#222e4e' }}, tickfont: { size: 20, color: '#222e4e' }, gridcolor: '#e0e0e0'},
             plot_bgcolor: '#fff',
             paper_bgcolor: '#fff',
             margin: { t: 80, l: 60, r: 40, b: 60 }
         };
         
         Plotly.newPlot('bernoulli_plot', charData,layout);
+
+        // Mostrar resultados numéricos en el HTML
+        const resultsContainer = document.getElementById('bernoulli_results');
+        resultsContainer.innerHTML ="";
+        const sequence = data.sequence;
+        if(sequence.length > 100){
+            for(let i = 0; i < 100; i++){
+                resultsContainer.innerHTML += sequence[i] + (i < 99 ? ', ' : '...');
+            }
+        } else {
+            resultsContainer.innerHTML += sequence.join(', ');
+        }
+
         createCSVDownloadButton({
             btnId: 'bernoulli_csv_btn',
             plotDivId: 'bernoulli_plot',
@@ -155,11 +119,6 @@ async function handleBernoulli(e){
                 ['Fracasos', data.failure]
             ]
         });
-
-        //Guardar el arreglo y llamar al botón
-        bernoulliResults=data.sequence;
-        const btn=document.getElementById('bernoulli_array_btn');
-        if(btn) btn.disabled = !Array.isArray(bernoulliResults);
 
     } catch (error) {
         console.error("Error en formulario de Bernoulli:", error);
