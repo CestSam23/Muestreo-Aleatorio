@@ -132,17 +132,7 @@ async function handleBinomial(e){
         const resultados = data.results;
 
         // Histograma
-        const charData = [{
-            x: resultados,
-            type: 'histogram',
-            marker: {
-                color: '#ad9664ff',
-                line: {
-                    color: '#88764fff',
-                    width: 1.5
-                }
-            }
-        }];
+        const charData = [{x: resultados, type: 'histogram', marker: {color: '#ad9664ff', line: {color: '#88764fff', width: 1.5}}}];
 
         const layout = {
             title: {
@@ -163,16 +153,10 @@ async function handleBinomial(e){
                 gridcolor: 'rgba(200,200,200,0.3)',
                 zeroline: false
             },
-            bargap: 0.05,
-            plot_bgcolor: '#fafafa',
-            paper_bgcolor: '#fafafa',
-            margin: { t: 80, l: 70, r: 50, b: 70 }
+            bargap: 0.05, plot_bgcolor: '#fafafa', paper_bgcolor: '#fafafa', margin: { t: 80, l: 70, r: 50, b: 70 }
         };
 
-        const config = {
-            responsive: true,
-            displaylogo: false
-        };
+        const config = {responsive: true, displaylogo: false};
 
         Plotly.newPlot('binomial_plot', charData, layout, config);
 
@@ -244,181 +228,71 @@ async function handleExponencial(e){
             headers: ['Valor'],
             rows: resultados.map(v => [v])
         });
-
-        // Descargar JSON
-        const btn = document.getElementById('exponencial_json_btn'); 
-        if (btn) {
-            btn.onclick = function() {
-                const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
-                const url = URL.createObjectURL(blob);
-                const a = document.createElement('a');
-                a.href = url;
-                a.download = 'exponencial_data.json';
-                document.body.appendChild(a);
-                a.click();
-                document.body.removeChild(a);
-                URL.revokeObjectURL(url);
-            };
-        }
     } catch (error) {
         console.error("Error en formulario de Exponencial:", error);
     }
+}
+
+//HELPER FOR MULTINOMIAL PLOT
+function updateMultinomialPlot(frecuencias, experimentoNum, totalExperimentos,element) {
+    const trace = {
+        x: Array.from({ length: frecuencias.length }, (_, i) => i + 1),
+        y: frecuencias,
+        type: 'bar'
+    };
+
+    const layout = {
+        title: `Resultados del Experimento ${experimentoNum} de ${totalExperimentos}`,
+        xaxis: { title: 'Categorías' },
+        yaxis: { title: 'Frecuencia' }
+    };
+
+    Plotly.newPlot(element, [trace], layout);
 }
 
 async function handleMultinomialF(e) {
     e.preventDefault();
     try {
         const data = await makeRequest('multinomialf', new FormData(this));
-        
-        // Crear el 3D Surface Plot
-        const resultados = data.results;
-        const experimentos = resultados.length;
-        const probabilidades = resultados[0].length;
-        
-        
-        // Preparar datos para surface plot
-        const zData = resultados;
-        
-        // Coordenadas para los ejes
-        const xValues = Array.from({length: experimentos}, (_, i) => i + 1);
-        const yValues = Array.from({length: probabilidades}, (_, i) => i + 1);
-        console.log(xValues,yValues)
-        
-        const trace = {             //Datos de la gráfica
-            x: xValues,             // Experimentos: [1, 2, 3, ...] K
-            y: yValues,             // Probabilidades: [1, 2, 3, ...] Theta's
-            z: zData,               // Resultado de muestreos
-            type: 'surface',
-            colorscale: 'Viridis',
-            colorbar: {
-                title: 'Frecuencia',
-                thickness: 15,
-                len: 0.75
-            },
-            opacity: 0.9,
-            lighting: {
-                ambient: 0.7,
-                diffuse: 0.8,
-                roughness: 0.9,
-                fresnel: 0.2
-            },
-            contours: {
-                x: {
-                    show: true,
-                    color: 'white',
-                    width: 1,
-                    highlight: false
-                },
-                y: {
-                    show: true,
-                    color: 'white', 
-                    width: 1,
-                    highlight: false
-                },
-                z: {
-                    show: true,
-                    usecolormap: true,
-                    width: 2,
-                    highlightcolor: '#42f462'
-                }
-            }
-        };
-        
-        const layout = {
-            title: {
-                text: `Distribución Multinomial<br>${experimentos} experimentos × ${probabilidades} probabilidades`,
-                font: { size: 16 }
-            },
-            scene: {
-                xaxis: {
-                    title: 'Número de Experimento',
-                    type: 'category',
-                    tickmode: 'array',
-                    tickvals: xValues,
-                    ticktext: xValues.map(val => `Exp ${val}`)
-                },
-                yaxis: {
-                    title: 'Probabilidad',
-                    type: 'category',
-                    tickmode: 'array',
-                    tickvals: yValues,
-                    ticktext: yValues.map(val => `Cat ${val}`)
-                },
-                zaxis: {
-                    title: 'Frecuencia de Éxitos',
-                    gridcolor: 'rgb(255, 255, 255)',
-                    gridwidth: 2
-                },
-                camera: {
-                    eye: { x: -1.5, y: -1.5, z: 1.2 }
-                },
-                aspectmode: 'manual',
-                aspectratio: {
-                    x: experimentos * 0.3,
-                    y: probabilidades * 0.5,
-                    z: 0.8
-                }
-            },
-            margin: {
-                l: 50,
-                r: 50,
-                b: 50,
-                t: 80
-            },
-            paper_bgcolor: 'rgb(243, 243, 243)',
-            plot_bgcolor: 'rgb(243, 243, 243)'
-        };
-        
-        const config = {
-            responsive: true,
-            displayModeBar: true,
-            displaylogo: false,
-            modeBarButtonsToAdd: ['resetCameraDefault3d']
-        };
-        
-        // Limpiar y crear la gráfica
-        const plotDiv = document.getElementById('multinomialf_plot');
-        plotDiv.innerHTML = '';
-        
-        Plotly.newPlot(plotDiv, [trace], layout, config);
 
-        // Each row is an experiment, columns are probabilidades
-        const headers = ['Experimento', ...Array.from({length: probabilidades}, (_, i) => `Prob${i+1}`)];
-        const rows = resultados.map((row, i) => [i+1, ...row]);
+        document.getElementById('currentPlot').value = 0;
+        const nextPlotBtn = document.getElementById('nextPlotBtn');
+
+        // Inicializar la gráfica con el primer conjunto de frecuencias
+        updateMultinomialPlot(data.results[0], 1, data.results.length,'multinomialf_plot');
+
+        nextPlotBtn.onclick = function() {
+            let currentPlot = parseInt(document.getElementById('currentPlot').value);
+            currentPlot++;
+            if (currentPlot >= data.results.length) {
+                currentPlot = 0;
+            }
+            
+            document.getElementById('currentPlot').value = currentPlot;
+            // Aquí se debe actualizar la gráfica con el nuevo índice
+            updateMultinomialPlot(data.results[currentPlot], currentPlot + 1, data.results.length,'multinomialf_plot');
+        };
+
+        resultados = data.results;
+        const categorias = resultados[0].length;
+        const frecuencias = resultados.map(row => row[0]); // Frecuencia de la primera categoría
+        console.log("Categorías:", categorias);
+        console.log("Frecuencias iniciales:", frecuencias);
+
         createCSVDownloadButton({
             btnId: 'multinomialf_csv_btn',
             plotDivId: 'multinomialf_plot',
             filename: 'multinomialf_data.csv',
-            headers,
-            rows
+            headers: ['Categoría', 'Frecuencia'],
+            rows: resultados.map((row, index) => [index + 1, row[0]])
         });
-
-       /* // --- JSON Download Button Logic ---
-        let btn = document.getElementById('multinomialf_json_btn');
-        if (!btn) {
-            btn = document.createElement('button');
-            btn.id = 'multinomialf_json_btn';
-            btn.textContent = 'Descargar JSON';
-            btn.style.marginTop = '10px';
-            plotDiv.parentNode.insertBefore(btn, plotDiv.nextSibling);
-        }*/
-        /*btn.onclick = function() {
-            const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = 'multinomialf_data.json';
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
-            URL.revokeObjectURL(url);
-        };*/
-        
     } catch (error) {
         console.error("Error en formulario de Multinomial F:", error);
         alert("Error al crear la gráfica: " + error.message);
     }
 }
+
+
 
 async function handleMultinomialV(e) {
     e.preventDefault();
@@ -426,6 +300,24 @@ async function handleMultinomialV(e) {
         const formData = new FormData(this);
         const data = await makeRequest('multinomialv', formData);
         
+        document.getElementById('currentPlot').value = 0;
+
+        const nextPlotBtn = document.getElementById('nextPlotBtn');
+        // Inicializar la gráfica con el primer conjunto de frecuencias
+        updateMultinomialPlot(data.results[0], 1, data.results.length,'multinomialv_plot');
+
+        nextPlotBtn.onclick = function() {
+            let currentPlot = parseInt(document.getElementById('currentPlot').value);
+            currentPlot++;
+            if (currentPlot >= data.results.length) {
+                currentPlot = 0;
+            }
+
+            document.getElementById('currentPlot').value = currentPlot;
+            // Aquí se debe actualizar la gráfica con el nuevo índice
+            updateMultinomialPlot(data.results[currentPlot], currentPlot + 1, data.results.length,'multinomialv_plot');
+        };
+
         // Obtener las probabilidades del formulario
         const probsDyn = formData.get('probs_dyn');
         let probabilidades = [];
@@ -438,127 +330,6 @@ async function handleMultinomialV(e) {
         const experimentos = resultados.length;
         const categorias = resultados[0].length;
         
-        // Preparar datos para surface plot
-        const zData = resultados;
-        
-        // Coordenadas para los ejes
-        const xValues = Array.from({length: experimentos}, (_, i) => i + 1);
-        const yValues = Array.from({length: categorias}, (_, i) => i + 1);
-        
-        // Crear labels para las categorías con sus probabilidades
-        const yLabels = yValues.map((cat, index) => {
-            if (probabilidades[index] !== undefined) {
-                return `Cat ${cat} (θ=${probabilidades[index]})`;
-            }
-            return `Cat ${cat}`;
-        });
-        
-        const trace = {
-            x: xValues,  // Experimentos: [1, 2, 3, ...]
-            y: yValues,  // Categorías: [1, 2, 3, ...] 
-            z: zData,    // Matriz 2D de frecuencias
-            type: 'surface',
-            colorscale: 'Plasma', // Diferente colorscale para distinguir
-            colorbar: {
-                title: 'Frecuencia',
-                thickness: 15,
-                len: 0.75
-            },
-            opacity: 0.9,
-            lighting: {
-                ambient: 0.7,
-                diffuse: 0.8,
-                roughness: 0.9,
-                fresnel: 0.2
-            },
-            contours: {
-                x: {
-                    show: true,
-                    color: 'white',
-                    width: 1,
-                    highlight: false
-                },
-                y: {
-                    show: true,
-                    color: 'white', 
-                    width: 1,
-                    highlight: false
-                },
-                z: {
-                    show: true,
-                    usecolormap: true,
-                    width: 2,
-                    highlightcolor: '#ff6b6b'
-                }
-            },
-            hoverinfo: 'x+y+z',
-            hovertemplate: 
-                '<b>Experimento:</b> %{x}<br>' +
-                '<b>Categoría:</b> %{customdata}<br>' +
-                '<b>Frecuencia:</b> %{z}<br>' +
-                '<extra></extra>',
-            customdata: Array(experimentos).fill(yLabels) // Datos para tooltips
-        };
-        
-        const layout = {
-            title: {
-                text: `Distribución Multinomial Variable<br>${experimentos} experimentos × ${categorias} categorías`,
-                font: { size: 16 }
-            },
-            scene: {
-                xaxis: {
-                    title: 'Número de Experimento',
-                    type: 'category',
-                    tickmode: 'array',
-                    tickvals: xValues,
-                    ticktext: xValues.map(val => `Exp ${val}`)
-                },
-                yaxis: {
-                    title: 'Categoría',
-                    type: 'category',
-                    tickmode: 'array',
-                    tickvals: yValues,
-                    ticktext: yLabels,
-                    tickangle: -45
-                },
-                zaxis: {
-                    title: 'Frecuencia de Éxitos',
-                    gridcolor: 'rgb(255, 255, 255)',
-                    gridwidth: 2
-                },
-                camera: {
-                    eye: { x: -1.8, y: -1.8, z: 1.5 }
-                },
-                aspectmode: 'manual',
-                aspectratio: {
-                    x: experimentos * 0.4,
-                    y: categorias * 0.6,
-                    z: 0.8
-                }
-            },
-            margin: {
-                l: 80, // Más margen izquierdo para labels largos
-                r: 50,
-                b: 80, // Más margen inferior
-                t: 100
-            },
-            paper_bgcolor: 'rgb(248, 249, 250)',
-            plot_bgcolor: 'rgb(248, 249, 250)'
-        };
-        
-        const config = {
-            responsive: true,
-            displayModeBar: true,
-            displaylogo: false,
-            modeBarButtonsToAdd: ['resetCameraDefault3d']
-        };
-        
-        // Limpiar y crear la gráfica
-        const plotDiv = document.getElementById('multinomialv_plot');
-        plotDiv.innerHTML = '';
-        
-        Plotly.newPlot(plotDiv, [trace], layout, config);
-
         // Each row is an experiment, columns are categorias
         const headers = ['Experimento', ...Array.from({length: categorias}, (_, i) => `Cat${i+1}`)];
         const rows = resultados.map((row, i) => [i+1, ...row]);
@@ -569,27 +340,6 @@ async function handleMultinomialV(e) {
             headers,
             rows
         });
-
-       /* // --- JSON Download Button Logic ---
-        let btn = document.getElementById('multinomialv_json_btn');
-        if (!btn) {
-            btn = document.createElement('button');
-            btn.id = 'multinomialv_json_btn';
-            btn.textContent = 'Descargar JSON';
-            btn.style.marginTop = '10px';
-            plotDiv.parentNode.insertBefore(btn, plotDiv.nextSibling);
-        }*/
-       /* btn.onclick = function() {
-            const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = 'multinomialv_data.json';
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
-            URL.revokeObjectURL(url);
-        };*/
         
     } catch (error) {
         console.error("Error en formulario de Multinomial V:", error);
@@ -882,10 +632,6 @@ async function handleNormalBiv(e) {
         });
     }
 }
-
-
-
-
 
 async function handleGibbs(e) {
     e.preventDefault();

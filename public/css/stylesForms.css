@@ -188,6 +188,19 @@ form input#button:hover{
     position: relative;
 }
 
+button{
+    background-color: #39556f;
+    color: white;
+    border: none;
+    cursor: pointer;
+    padding: 16px 32px;
+    border-radius: 12px;
+    margin-top: 20px;
+}
+
+button:hover{
+    background-color: #2e424d;
+}
 
 
 #bernoulli_array_btn,#btn_2d, #btn_3d {
