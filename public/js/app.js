@@ -886,6 +886,24 @@ async function handleGibbs(e) {
             }
         }
 
+        /*Graficado de todos los puntos */
+        const scatter2D={
+            type: 'scattergl',
+            mode: 'markers',
+            x:resultadosX,
+            y:resultadosY,
+            marker: {size: 4, opacity: 0.7},
+            name: 'Muestras (X,Y)'
+        }
+
+        const layout2D = {
+            title: { text: 'Histograma completo 2D (muestras sin filtrar)', font: { size: 24, color: '#222e4e' } },
+            xaxis: { title: { text: 'X' } },
+            yaxis: { title: { text: 'Y' } },
+            paper_bgcolor: '#ffffff',
+            margin: { l: 50, r: 10, b: 40, t: 60 }
+        };
+
         const trace = {
             type: 'mesh3d',
             x: X, y: Y, z: Z,
@@ -934,6 +952,22 @@ async function handleGibbs(e) {
         };
 
         Plotly.newPlot('gibbs_plot', [trace], layout, {responsive: true});
+
+        /*Botones para alternar */
+        const btn2D = document.getElementById('btn_2d');
+        const btn3D = document.getElementById('btn_3d');
+
+        if (btn2D) {
+            btn2D.onclick = () => {
+                Plotly.newPlot('gibbs_plot', [scatter2D], layout2D, { responsive: true });
+            };
+        }
+        if (btn3D) {
+            btn3D.onclick = () => {
+                Plotly.newPlot('gibbs_plot', [trace], layout, { responsive: true });
+            };
+        }
+    
 
         // (Opcional) botón JSON si lo tienes en tu HTML con id 'gibbs_json_btn'
         const btn = document.getElementById('gibbs_json_btn');

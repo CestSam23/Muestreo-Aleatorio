@@ -150,14 +150,14 @@ form input {
     transition: border-color 0.3s ease;
 }
 
-form input#button {
+form input#button{
     background-color: #39556f;
     color: white;
     border: none;
     cursor: pointer;
 }
 
-form input#button:hover {
+form input#button:hover{
     background-color: #2e424d;
 }
 
@@ -182,7 +182,7 @@ form input#button:hover {
 
 
 
-#bernoulli_array_btn {
+#bernoulli_array_btn,#btn_2d, #btn_3d {
     background-color: #39556f;
     color: white;
     border: none;
@@ -191,6 +191,6 @@ form input#button:hover {
     border-radius: 12px;
     margin-top: auto;
 }
-#bernoulli_array_btn:hover {
+#bernoulli_array_btn:hover, #btn_2d:hover, #btn_3d:hover{
     background-color: #2e424d;
 }
