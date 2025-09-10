@@ -236,16 +236,18 @@ async function handleExponencial(e){
 
 //HELPER FOR MULTINOMIAL PLOT
 function updateMultinomialPlot(frecuencias, experimentoNum, totalExperimentos,element) {
-    const trace = {
-        x: Array.from({ length: frecuencias.length }, (_, i) => i + 1),
-        y: frecuencias,
-        type: 'bar'
-    };
-
     const layout = {
         title: `Resultados del Experimento ${experimentoNum} de ${totalExperimentos}`,
         xaxis: { title: 'Categorías' },
-        yaxis: { title: 'Frecuencia' }
+        yaxis: { title: 'Frecuencia' },
+        
+    };
+
+    const trace = {
+        x: Array.from({ length: frecuencias.length }, (_, i) => i + 1),
+        y: frecuencias,
+        type: 'bar',
+        marker: {color: '#ad9664ff', line: {color: '#88764fff', width: 1.5}}
     };
 
     Plotly.newPlot(element, [trace], layout);
@@ -258,6 +260,7 @@ async function handleMultinomialF(e) {
 
         document.getElementById('currentPlot').value = 0;
         const nextPlotBtn = document.getElementById('nextPlotBtn');
+        nextPlotBtn.style.visibility = 'visible';
 
         // Inicializar la gráfica con el primer conjunto de frecuencias
         updateMultinomialPlot(data.results[0], 1, data.results.length,'multinomialf_plot');
@@ -304,6 +307,7 @@ async function handleMultinomialV(e) {
         document.getElementById('currentPlot').value = 0;
 
         const nextPlotBtn = document.getElementById('nextPlotBtn');
+        nextPlotBtn.style.visibility = 'visible';
         // Inicializar la gráfica con el primer conjunto de frecuencias
         updateMultinomialPlot(data.results[0], 1, data.results.length,'multinomialv_plot');
 
