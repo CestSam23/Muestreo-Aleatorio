@@ -693,6 +693,68 @@ async function handleNormale(e) {
     }
 }
 
+async function handleNormalMV(e) {
+    e.preventDefault();
+    try {
+        console.log("Manejando formulario Normal Multivariante");
+        const data = await makeRequest('normalmv', new FormData(this));
+        const resultados = data.results;
+
+        const charData = [{
+            x: resultados,
+            type: 'histogram',
+            marker: {
+                color:'#ad9664ff',
+                line:{
+                    color: '#88764fff',
+                    width: 1
+                }
+            }
+        }];
+
+        const layout = {
+            title: {
+                text: "Distribución Normal Multivariante",
+                font: { size: 24, color: '#222e4e' }
+            },
+            xaxis: {
+                title: { text: "Valor", font: { size: 22, color: '#222e4e' } },
+                tickfont: { size: 18, color: '#222e4e' }
+            },
+            yaxis: {
+                title: { text: "Frecuencia", font: { size: 22, color: '#222e4e' } },
+                tickfont: { size: 18, color: '#222e4e' }
+            },
+            bargap: 0.05
+        };
+
+        Plotly.newPlot('normalmv_plot', charData, layout);
+
+        createCSVDownloadButton({
+            btnId: 'normalmv_csv_btn',
+            plotDivId: 'normalmv_plot',
+            filename: 'normalmv_data.csv',
+            headers: ['Valor'],
+            rows: resultados.map(v => [v])
+        });
+
+        btn.onclick = function() {
+            const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'normalmv_data.json';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        };
+
+    } catch (error) {
+        console.error("Error en formulario de Normal Multivariante:", error);
+    }
+}
+
 async function handleNormalBiv(e) {
     e.preventDefault();
     try {
@@ -717,8 +779,8 @@ async function handleNormalBiv(e) {
         const yMin = data?.limits?.yMin ?? yDataMin;
         const yMax = data?.limits?.yMax ?? yDataMax;
 
-        const binsX = Number(data?.bins?.x ?? data?.binsX ?? 30);
-        const binsY = Number(data?.bins?.y ?? data?.binsY ?? 30);
+        const binsX = Number(data?.bins?.x ?? data?.binsX ?? 50);
+        const binsY = Number(data?.bins?.y ?? data?.binsY ?? 50);
 
         if (!Number.isFinite(xMin) || !Number.isFinite(xMax) || !Number.isFinite(yMin) || !Number.isFinite(yMax)) {
             throw new Error("Límites inválidos para el histograma 3D.");
@@ -863,67 +925,7 @@ async function handleNormalBiv(e) {
 }
 
 
-async function handleNormalMV(e) {
-    e.preventDefault();
-    try {
-        console.log("Manejando formulario Normal Multivariante");
-        const data = await makeRequest('normalmv', new FormData(this));
-        const resultados = data.results;
 
-        const charData = [{
-            x: resultados,
-            type: 'histogram',
-            marker: {
-                color:'#ad9664ff',
-                line:{
-                    color: '#88764fff',
-                    width: 1
-                }
-            }
-        }];
-
-        const layout = {
-            title: {
-                text: "Distribución Normal Multivariante",
-                font: { size: 24, color: '#222e4e' }
-            },
-            xaxis: {
-                title: { text: "Valor", font: { size: 22, color: '#222e4e' } },
-                tickfont: { size: 18, color: '#222e4e' }
-            },
-            yaxis: {
-                title: { text: "Frecuencia", font: { size: 22, color: '#222e4e' } },
-                tickfont: { size: 18, color: '#222e4e' }
-            },
-            bargap: 0.05
-        };
-
-        Plotly.newPlot('normalmv_plot', charData, layout);
-
-        createCSVDownloadButton({
-            btnId: 'normalmv_csv_btn',
-            plotDivId: 'normalmv_plot',
-            filename: 'normalmv_data.csv',
-            headers: ['Valor'],
-            rows: resultados.map(v => [v])
-        });
-
-        btn.onclick = function() {
-            const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = 'normalmv_data.json';
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
-            URL.revokeObjectURL(url);
-        };
-
-    } catch (error) {
-        console.error("Error en formulario de Normal Multivariante:", error);
-    }
-}
 
 
 async function handleGibbs(e) {
