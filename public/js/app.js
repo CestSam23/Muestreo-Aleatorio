@@ -1139,23 +1139,7 @@ async function handleGibbs(e) {
                 Plotly.newPlot('gibbs_plot', [trace], layout, { responsive: true });
             };
         }
-    
 
-        // (Opcional) botón JSON si lo tienes en tu HTML con id 'gibbs_json_btn'
-        const btn = document.getElementById('gibbs_json_btn');
-        if (btn) {
-            btn.onclick = function() {
-                const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
-                const url = URL.createObjectURL(blob);
-                const a = document.createElement('a');
-                a.href = url;
-                a.download = 'gibbs_data.json';
-                document.body.appendChild(a);
-                a.click();
-                document.body.removeChild(a);
-                URL.revokeObjectURL(url);
-            };
-        }
 
     } catch(error){
         console.error("Error en formulario de Gibbs:", error);
