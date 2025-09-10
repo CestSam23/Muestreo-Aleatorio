@@ -172,7 +172,6 @@ form input#button:hover{
     flex-direction: column;
     align-items: center;
     text-align: center;
-    justify-content: center;
     padding: 50px;
     transition: all 0.3s ease;
     cursor: pointer;
@@ -180,7 +179,14 @@ form input#button:hover{
     position: relative;
 }
 
-
+.equation-preview{
+  min-height: 40px;
+  padding: 10px 12px;
+  border: none;
+  background: #ffff;
+  color: #1f2937;
+  font-size: 1.0 rem;
+}
 
 #bernoulli_array_btn,#btn_2d, #btn_3d {
     background-color: #39556f;
@@ -193,4 +199,10 @@ form input#button:hover{
 }
 #bernoulli_array_btn:hover, #btn_2d:hover, #btn_3d:hover{
     background-color: #2e424d;
+}
+
+.plot-actions {
+    margin-top: auto; 
+    display: flex;
+    gap: 150px; 
 }

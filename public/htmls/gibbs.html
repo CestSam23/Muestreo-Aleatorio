@@ -7,6 +7,9 @@
     <script src="https://cdn.plot.ly/plotly-2.24.1.min.js"></script>
     <script src="/public/js/app.js"></script>
     <link rel="stylesheet" href="/public/css/stylesForms.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+
 </head>
 
 <header>
@@ -21,6 +24,7 @@
                 <label for="num_muestra">Número de Muestras por experimentos:</label>
                 <input type="number" id="num_muestra" name="num_muestra" min="1" value="10">
                 <label for="funcion">Función de densidad: </label>
+                <div id="funcion_preview" class="equation-preview"></div>
                 <input type="text" id="funcion" name="funcion" value="(1/28)*(2*x+3*y+2)">
                 <div class="subcolumns">
                     <label for="limites">Límites: </label>

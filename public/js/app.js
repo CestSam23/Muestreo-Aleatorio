@@ -1153,3 +1153,51 @@ async function handleGibbs(e) {
         });
     }
 }
+
+document.addEventListener('DOMContentLoaded', () => {
+  const input = document.getElementById('funcion');
+  const preview = document.getElementById('funcion_preview');
+  if (!input || !preview || typeof katex === 'undefined') return;
+
+  const exprToLatex = (s) => {
+    if (!s) return '';
+    let t = s.trim();
+
+    // Quita espacios
+    t = t.replace(/\s+/g, '');
+
+    // Fracciones simples a \frac{a}{b}
+    t = t.replace(/(?<![a-zA-Z0-9_])(\d+)\s*\/\s*(\d+)(?![a-zA-Z0-9_])/g, '\\frac{$1}{$2}');
+
+    // Quitar * entre número y variable: 2*x -> 2x, x*y -> x\cdot y
+    t = t.replace(/(\d+)\*([a-zA-Z])/g, '$1$2');     // 2*x -> 2x
+    t = t.replace(/([a-zA-Z])\*(\d+)/g, '$1$2');     // x*2 -> x2 (raro pero común en input)
+    t = t.replace(/([a-zA-Z])\*([a-zA-Z])/g, '$1\\cdot $2'); // x*y -> x·y
+
+    // Potencias: x^2, (x+y)^3
+    t = t.replace(/\^\(/g, '^{('); // por si escriben ^(…
+    t = t.replace(/\^([a-zA-Z0-9]+)/g, '^{$1}');
+
+    // Paréntesis bonitos
+    t = t.replace(/\(/g, '\\left(').replace(/\)/g, '\\right)');
+
+    // Multiplicaciones restantes con * a \cdot
+    t = t.replace(/\*/g, '\\cdot ');
+
+    return t;
+  };
+
+  const render = () => {
+    const raw = input.value || '';
+    const latex = exprToLatex(raw);
+    try {
+      // Puedes cambiar el prefijo por p(x,y)= si quieres
+      katex.render(`f(x,y)= ${latex}`, preview, { throwOnError: false });
+    } catch {
+      preview.textContent = ''; // si hay error, limpia
+    }
+  };
+
+  render();                 // render inicial con el valor por defecto
+  input.addEventListener('input', render);
+});
