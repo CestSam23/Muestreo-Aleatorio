@@ -624,6 +624,7 @@ async function handleNormalBiv(e) {
         };
 
         Plotly.newPlot('normalbiv_plot', [trace], layout, { responsive: true });
+        intercalatedbtn('btn_2dNB','btn_3dNB',resultadosX, resultadosY, 'normalbiv_plot', trace, layout);
 
     } catch (error) {
         console.error("Error en formulario de Normal Bivariada:", error);
@@ -768,24 +769,6 @@ async function handleGibbs(e) {
             }
         }
 
-        /*Graficado de todos los puntos */
-        const scatter2D={
-            type: 'scattergl',
-            mode: 'markers',
-            x:resultadosX,
-            y:resultadosY,
-            marker: {size: 4, opacity: 0.7},
-            name: 'Muestras (X,Y)'
-        }
-
-        const layout2D = {
-            title: { text: 'Histograma completo 2D (muestras sin filtrar)', font: { size: 24, color: '#222e4e' } },
-            xaxis: { title: { text: 'X' } },
-            yaxis: { title: { text: 'Y' } },
-            paper_bgcolor: '#ffffff',
-            margin: { l: 50, r: 10, b: 40, t: 60 }
-        };
-
         const trace = {
             type: 'mesh3d',
             x: X, y: Y, z: Z,
@@ -835,20 +818,7 @@ async function handleGibbs(e) {
 
         Plotly.newPlot('gibbs_plot', [trace], layout, {responsive: true});
 
-        /*Botones para alternar */
-        const btn2D = document.getElementById('btn_2d');
-        const btn3D = document.getElementById('btn_3d');
-
-        if (btn2D) {
-            btn2D.onclick = () => {
-                Plotly.newPlot('gibbs_plot', [scatter2D], layout2D, { responsive: true });
-            };
-        }
-        if (btn3D) {
-            btn3D.onclick = () => {
-                Plotly.newPlot('gibbs_plot', [trace], layout, { responsive: true });
-            };
-        }
+        intercalatedbtn('btn_2dG','btn_3dG',resultadosX, resultadosY, 'gibbs_plot', trace, layout);
 
 
     } catch(error){
@@ -862,4 +832,89 @@ async function handleGibbs(e) {
             }]
         });
     }
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  const input = document.getElementById('funcion');
+  const preview = document.getElementById('funcion_preview');
+  if (!input || !preview || typeof katex === 'undefined') return;
+
+  const exprToLatex = (s) => {
+    if (!s) return '';
+    let t = s.trim();
+
+    // Quita espacios
+    t = t.replace(/\s+/g, '');
+
+    // Fracciones simples a \frac{a}{b}
+    t = t.replace(/(?<![a-zA-Z0-9_])(\d+)\s*\/\s*(\d+)(?![a-zA-Z0-9_])/g, '\\frac{$1}{$2}');
+
+    // Quitar * entre número y variable: 2*x -> 2x, x*y -> x\cdot y
+    t = t.replace(/(\d+)\*([a-zA-Z])/g, '$1$2');     // 2*x -> 2x
+    t = t.replace(/([a-zA-Z])\*(\d+)/g, '$1$2');     // x*2 -> x2 (raro pero común en input)
+    t = t.replace(/([a-zA-Z])\*([a-zA-Z])/g, '$1\\cdot $2'); // x*y -> x·y
+
+    // Potencias: x^2, (x+y)^3
+    t = t.replace(/\^\(/g, '^{('); // por si escriben ^(…
+    t = t.replace(/\^([a-zA-Z0-9]+)/g, '^{$1}');
+
+    // Paréntesis bonitos
+    t = t.replace(/\(/g, '\\left(').replace(/\)/g, '\\right)');
+
+    // Multiplicaciones restantes con * a \cdot
+    t = t.replace(/\*/g, '\\cdot ');
+
+    return t;
+  };
+
+  const render = () => {
+    const raw = input.value || '';
+    const latex = exprToLatex(raw);
+    try {
+      // Puedes cambiar el prefijo por p(x,y)= si quieres
+      katex.render(`f(x,y)= ${latex}`, preview, { throwOnError: false });
+    } catch {
+      preview.textContent = ''; // si hay error, limpia
+    }
+  };
+
+  render();                 // render inicial con el valor por defecto
+  input.addEventListener('input', render);
+});
+
+async function intercalatedbtn(btn_2d, btn_3d, resX, resY, plot, trace3D, layout3D) {
+    const btn2D = document.getElementById(btn_2d);
+    const btn3D = document.getElementById(btn_3d);
+    if (btn2D) {
+        btn2D.onclick = () => {
+            scatter2dplot(resX, resY, plot);
+        };
+    }
+    if (btn3D) {
+        btn3D.onclick = () => {
+            Plotly.newPlot(plot, [trace3D], layout3D, { responsive: true });
+        };
+    }
+}
+
+function scatter2dplot(resultadosX, resultadosY,plot){
+    /*Graficado de todos los puntos */
+    const scatter2D={
+        type: 'scattergl',
+        mode: 'markers',
+        x:resultadosX,
+        y:resultadosY,
+        marker: {size: 4, opacity: 0.7},
+        name: 'Muestras (X,Y)'
+    }
+
+    const layout2D = {
+        title: { text: 'Histograma completo 2D (muestras sin filtrar)', font: { size: 24, color: '#222e4e' } },
+        xaxis: { title: { text: 'X' } },
+        yaxis: { title: { text: 'Y' } },
+        paper_bgcolor: '#ffffff',
+        margin: { l: 50, r: 10, b: 40, t: 60 }
+    };
+
+    Plotly.newPlot(plot, [scatter2D], layout2D, { responsive: true });
 }
