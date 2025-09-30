@@ -904,7 +904,7 @@ function scatter2dplot(resultadosX, resultadosY,plot){
         mode: 'markers',
         x:resultadosX,
         y:resultadosY,
-        marker: {size: 4, opacity: 0.7},
+        marker: {size: 4, opacity: 0.7, color: "#ad9664ff"},
         name: 'Muestras (X,Y)'
     }
 
