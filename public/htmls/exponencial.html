@@ -17,6 +17,7 @@
 <body>
     <div class="container">        
         <div class="FormularioData">
+            <button id="info-btn" class="info-button" type="button">!</button>
             <form id="exponencial_form" onsubmit="return false;">
                 <label for="num_experimentos">Número de Experimentos:</label>
                 <input type="number" id="num_experimentos" name="num_experimentos" min="1" value="100">
@@ -31,6 +32,22 @@
         <div class="resultados">
             <h3>Resultados de la Simulación</h3>
             <div id="exponencial_plot"></div>
+        </div>
+    </div>
+
+    <!-- Info Modal -->
+    <div id="info-modal" class="info-modal">
+        <div class="info-modal-content">
+            <button class="info-modal-close">&times;</button>
+            <h3>Distribución Exponencial</h3>
+            <p>La distribución exponencial modela el tiempo entre eventos en un proceso de Poisson.</p>
+            <div class="formula">
+                f(x; λ) = λe<sup>-λx</sup><br>
+                para x ≥ 0
+            </div>
+            <p><strong>λ</strong>: Tasa de ocurrencia (tasa de llegada)</p>
+            <p><strong>Media</strong>: 1/λ</p>
+            <p><strong>Aplicaciones</strong>: Tiempo entre llegadas de clientes, vida útil de componentes, tiempo entre fallas.</p>
         </div>
     </div>
 </body>

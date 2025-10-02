@@ -17,6 +17,7 @@
 <body>
     <div class="container">
         <div class="FormularioData">
+            <button id="info-btn" class="info-button" type="button">!</button>
             <form id="multinomialv_form" onsubmit="return false;">
                 <label for="num_experimentos">Número de Experimentos:</label>
                 <input type="number" id="num_experimentos" name="num_experimentos" min="1" value="6">
@@ -38,6 +39,22 @@
             <div id="multinomialv_plot"></div>
             <button id="nextPlotBtn" style="visibility: hidden;">Siguiente Gráfico</button>
             <input type="text" id="currentPlot" value="0" hidden>
+        </div>
+    </div>
+
+    <!-- Info Modal -->
+    <div id="info-modal" class="info-modal">
+        <div class="info-modal-content">
+            <button class="info-modal-close">&times;</button>
+            <h3>Distribución Multinomial Variable</h3>
+            <p>La distribución multinomial con probabilidades variables permite especificar diferentes probabilidades para cada categoría.</p>
+            <div class="formula">
+                P(X₁=x₁, ..., Xₖ=xₖ) = (n!/(x₁!...xₖ!)) × p₁<sup>x₁</sup>...pₖ<sup>xₖ</sup><br>
+                donde Σxᵢ = n y Σpᵢ = 1
+            </div>
+            <p><strong>n</strong>: Número total de ensayos</p>
+            <p><strong>pᵢ</strong>: Probabilidad específica de cada categoría (definidas por el usuario)</p>
+            <p><strong>Aplicaciones</strong>: Sabores favoritos de helado con diferentes popularidades, preferencias de votantes, análisis de mercado.</p>
         </div>
     </div>
 </body>
