@@ -16,13 +16,35 @@ body {
 }
 
 header {
-    text-align: center;
-    color: #39556f;
-    margin-bottom: 40px;
-    padding: 20px;;
-    max-width: 1000px;
-
+  width: 100%;
+  padding: 20px;
+  margin-bottom: 40px;
+  display: flex;
+  align-items: center;        /* centra verticalmente */
+  justify-content: center;    /* centra el contenido principal */
+  color: #39556f;
+  position: relative;         /* clave para posicionar el <a> */
 }
+
+header a {
+  position: absolute;         /* lo sacamos del flujo para pegarlo a la izquierda */
+  left: 20px;                 /* margen desde el borde */
+  top: 50%;
+  transform: translateY(-50%); /* lo centramos verticalmente */
+  
+  text-decoration: none;
+  color: #39556f;
+  font-weight: bold;
+  padding: 10px 20px;
+  border: 2px solid #39556f;
+  border-radius: 12px;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+header div {
+  text-align: center;         /* centra el texto dentro del contenedor */
+}
+
 
 header h1 {
     font-size: 2.8rem;

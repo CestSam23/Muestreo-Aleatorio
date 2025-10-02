@@ -253,7 +253,7 @@ const requestListener = function (req, res) {
         } else if (req.url.startsWith('/api/gibbs')){
             const params = parseQueryParams(req.url);
             const n = params.num_muestra;
-            const funcion = params.funcion;
+            const funcion = params.funcion.toString();
             const xp = params.pointX;
             const yp = params.pointY;
             const limitex1 = params.limitex1;
