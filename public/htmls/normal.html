@@ -21,6 +21,7 @@
 <body>
     <div class="container">
         <div class="FormularioData">
+            <button id="info-btn" class="info-button" type="button">!</button>
             <form id="normale_form" onsubmit="return false;">
                 <label for="num_muestra">Número de Muestras por experimentos:</label>
                 <input type="number" id="num_muestra" name="num_muestra" min="1" value="10">
@@ -32,6 +33,22 @@
         <div class="resultados">
             <h3>Resultados de la Simulación</h3>
             <div id="normale_plot"></div>
+        </div>
+    </div>
+
+    <!-- Info Modal -->
+    <div id="info-modal" class="info-modal">
+        <div class="info-modal-content">
+            <button class="info-modal-close">&times;</button>
+            <h3>Distribución Normal Estándar</h3>
+            <p>La distribución normal estándar es una distribución normal con media μ = 0 y desviación estándar σ = 1.</p>
+            <div class="formula">
+                f(x) = (1/√(2π)) × e<sup>-x²/2</sup><br>
+                para -∞ < x < ∞
+            </div>
+            <p><strong>Media (μ)</strong>: 0</p>
+            <p><strong>Desviación estándar (σ)</strong>: 1</p>
+            <p><strong>Aplicaciones</strong>: Distribución de referencia, análisis estadístico estándar, comparación de datos normalizados.</p>
         </div>
     </div>
 </body>

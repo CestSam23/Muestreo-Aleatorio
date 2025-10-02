@@ -21,6 +21,7 @@
 <body>
     <div class="container">
         <div class="FormularioData">
+            <button id="info-btn" class="info-button" type="button">!</button>
             <form id="normalmv_form" onsubmit="return false;">
                 <label for="num_muestra">Número de Muestras por experimentos:</label>
                 <input type="number" id="num_muestra" name="num_muestra" min="1" value="1000">
@@ -36,6 +37,22 @@
         <div class="resultados">
             <h3>Resultados de la Simulación</h3>
             <div id="normalmv_plot"></div>
+        </div>
+    </div>
+
+    <!-- Info Modal -->
+    <div id="info-modal" class="info-modal">
+        <div class="info-modal-content">
+            <button class="info-modal-close">&times;</button>
+            <h3>Distribución Normal con μ y σ²</h3>
+            <p>La distribución normal general permite ajustar la media (μ) y la varianza (σ²) de la distribución.</p>
+            <div class="formula">
+                f(x; μ, σ²) = (1/(σ√(2π))) × e<sup>-(x-μ)²/(2σ²)</sup><br>
+                para -∞ < x < ∞
+            </div>
+            <p><strong>μ (mu)</strong>: Media o valor esperado</p>
+            <p><strong>σ² (sigma cuadrado)</strong>: Varianza, mide la dispersión de los datos</p>
+            <p><strong>Aplicaciones</strong>: Calificaciones de exámenes, alturas de personas, errores de medición, variables continuas en general.</p>
         </div>
     </div>
 </body>

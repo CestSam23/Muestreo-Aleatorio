@@ -23,6 +23,7 @@
 
     <div class="container">
         <div class="FormularioData">
+            <button id="info-btn" class="info-button" type="button">!</button>
             <form id="bernoulli_form" onsubmit="return false;"> 
                 <label for="num_experimentos">Número de Experimentos:</label>
                 <input type="number" id="num_experimentos" name="num_experimentos" min="1" value="100">
@@ -42,6 +43,21 @@
         <div class="resultados">
             <h3>Resultados de la Simulación</h3>
             <div id="bernoulli_plot"></div>
+        </div>
+    </div>
+
+    <!-- Info Modal -->
+    <div id="info-modal" class="info-modal">
+        <div class="info-modal-content">
+            <button class="info-modal-close">&times;</button>
+            <h3>Distribución de Bernoulli</h3>
+            <p>La distribución de Bernoulli modela experimentos con solo dos posibles resultados: éxito o fracaso.</p>
+            <div class="formula">
+                P(X = x) = θ<sup>x</sup>(1 - θ)<sup>1-x</sup><br>
+                donde x ∈ {0, 1}
+            </div>
+            <p><strong>θ</strong>: Probabilidad de éxito</p>
+            <p><strong>Aplicaciones</strong>: Lanzamiento de monedas, pruebas de calidad (producto defectuoso/no defectuoso), etc.</p>
         </div>
     </div>
 </body>

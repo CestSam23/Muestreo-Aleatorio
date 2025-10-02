@@ -24,6 +24,7 @@
 <body>
     <div class="container">
         <div class="FormularioData">
+            <button id="info-btn" class="info-button" type="button">!</button>
             <form id="gibbs_form" onsubmit="return false;">
                 <label for="num_muestra">Número de Muestras por experimentos:</label>
                 <input type="number" id="num_muestra" name="num_muestra" min="1" value="10">
@@ -67,6 +68,22 @@
                 <button id="btn_2dG" type="button">Ver histograma completo 2D</button>
                 <button id="btn_3dG" type="button">Ver histograma 3D</button>
             </div>
+        </div>
+    </div>
+
+    <!-- Info Modal -->
+    <div id="info-modal" class="info-modal">
+        <div class="info-modal-content">
+            <button class="info-modal-close">&times;</button>
+            <h3>Muestreo de Gibbs</h3>
+            <p>El muestreo de Gibbs es un algoritmo MCMC (Markov Chain Monte Carlo) para generar muestras de una distribución multivariante.</p>
+            <div class="formula">
+                Xᵢ<sup>(t+1)</sup> ~ P(Xᵢ | X₁<sup>(t+1)</sup>, ..., Xᵢ₋₁<sup>(t+1)</sup>, Xᵢ₊₁<sup>(t)</sup>, ..., Xₙ<sup>(t)</sup>)<br>
+                Actualización iterativa de cada variable condicionada a las demás
+            </div>
+            <p><strong>Proceso</strong>: Se muestrea cada variable condicionadamente a las demás, iterativamente</p>
+            <p><strong>Ventaja</strong>: Permite muestrear de distribuciones complejas multivariantes</p>
+            <p><strong>Aplicaciones</strong>: Inferencia Bayesiana, procesamiento de imágenes, análisis de sistemas complejos, predicción climática.</p>
         </div>
     </div>
 

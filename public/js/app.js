@@ -918,3 +918,31 @@ function scatter2dplot(resultadosX, resultadosY,plot){
 
     Plotly.newPlot(plot, [scatter2D], layout2D, { responsive: true });
 }
+
+/*---------------INFO BUTTON FUNCTIONALITY --------------------*/
+function setupInfoButton() {
+    const infoBtn = document.getElementById('info-btn');
+    const infoModal = document.getElementById('info-modal');
+    const closeBtn = document.querySelector('.info-modal-close');
+    
+    if (infoBtn && infoModal) {
+        infoBtn.onclick = () => {
+            infoModal.style.display = 'block';
+        };
+        
+        if (closeBtn) {
+            closeBtn.onclick = () => {
+                infoModal.style.display = 'none';
+            };
+        }
+        
+        window.onclick = (event) => {
+            if (event.target === infoModal) {
+                infoModal.style.display = 'none';
+            }
+        };
+    }
+}
+
+// Initialize info button when DOM is ready
+document.addEventListener('DOMContentLoaded', setupInfoButton);

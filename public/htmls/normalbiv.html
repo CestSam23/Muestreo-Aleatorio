@@ -21,6 +21,7 @@
 <body>
     <div class="container">
         <div class="FormularioData">
+            <button id="info-btn" class="info-button" type="button">!</button>
             <form id="normalbiv_form" onsubmit="return false;">
                 <label for="num_muestra">Número de Muestras por experimentos:</label>
                 <input type="number" id="num_muestra" name="num_muestra" min="1" value="1000">
@@ -46,6 +47,23 @@
                 <button id="btn_2dNB" type="button">Ver histograma completo 2D</button>
                 <button id="btn_3dNB" type="button">Ver histograma 3D</button>
             </div>
+        </div>
+    </div>
+
+    <!-- Info Modal -->
+    <div id="info-modal" class="info-modal">
+        <div class="info-modal-content">
+            <button class="info-modal-close">&times;</button>
+            <h3>Distribución Normal Bivariable</h3>
+            <p>La distribución normal bivariable describe dos variables aleatorias normalmente distribuidas que pueden estar correlacionadas.</p>
+            <div class="formula">
+                f(x,y) = 1/(2πσ₁σ₂√(1-ρ²)) × exp(-Q/(2(1-ρ²)))<br>
+                donde Q = ((x-μ₁)/σ₁)² - 2ρ((x-μ₁)/σ₁)((y-μ₂)/σ₂) + ((y-μ₂)/σ₂)²
+            </div>
+            <p><strong>μ₁, μ₂</strong>: Medias de las variables X y Y</p>
+            <p><strong>σ₁, σ₂</strong>: Desviaciones estándar de X y Y</p>
+            <p><strong>ρ (rho)</strong>: Coeficiente de correlación (-1 ≤ ρ ≤ 1)</p>
+            <p><strong>Aplicaciones</strong>: Altura y peso de personas, temperatura y humedad, variables relacionadas en general.</p>
         </div>
     </div>
 </body>
